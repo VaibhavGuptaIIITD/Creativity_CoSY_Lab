@@ -1,0 +1,30 @@
+**ALPHAZERO IMPLEMENTATION**
+
+AlphaZero works with the modified version of Monte Carlo Tree Search which aids in choice-making and game playing. It follows multiple steps and computes decisions to make sure the steps taken, whether from existing options or from expanded steps ultimately leads to the best possible output, which it improves upon by playing against itself over time. It follows the exploration-exploitation trade-off, which is making sure that choosing options which have given the best outputs till now as well as taking chances with options which haven't been chosen much as of now, in the hope that it improves later.
+
+In Monte Carlo Tree Search, we look at the current situation that the game is in right now, and the action that we can take which looks the most promising for winning the game. Consider a tree with a root node which would be considered State 0, and it has 2 children, State 1 and State 2 which can be reached by undergoing Action 1 and Action 2 respectively. For each State of the game or each node of the tree, there are 2 parameters, the number of wins that has been recorded from that node and the total number of times that node has been traversed. The overall process is divided into 4 major parts, which in sequence are as follows :
+
+// image of MCT //
+
+1. **Selection**
+
+This refers to selecting the child we would like to move to from the parent node, or the action we would like to perform which would guarantee better returns in the future. The direction we choose to traverse downwards depends on the computation of the UCB formula that takes into consideration both the winning ratio of the node as well as giving opportunity to the nodes which were traversed less often. 
+
+// image of UCB //
+
+2. **Expansion**
+
+This phase refers to creation of a new node in the tree or new state in the game, which can be done from a pre-existing parent state by taking a new action. On creation of a node, the number of wins and number of visits are initially set as 0.
+
+3. **Simulation**
+
+This state of the game refers to playing randomly from a state until the game ends, that is a draw, loss or win is recorded in the process. At the end of this phase, we reach the terminal node and record the outcome of the game which is helpful for the next phase.
+
+4. **Backpropagation**
+
+At this state, we start traversing backwards / upwards from the terminal node all the way to the root node encountering all the states and actions we took earlier to reach the conclusion of the game. While traversing backwards, we increase the number of visits count by 1 for all the traversed nodes / states, as well as increment the number of wins count by either 1 or 0.5 in case of a win or draw respectively.
+
+// image of the complete traversal of MCT //
+
+
+
