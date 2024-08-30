@@ -8,7 +8,7 @@ In Monte Carlo Tree Search, we look at the current situation that the game is in
 
 1. **Selection**
 
-This refers to selecting the child we would like to move to from the parent node, or the action we would like to perform which would guarantee better returns in the future. The direction we choose to traverse downwards depends on the computation of the UCB formula that takes into consideration both the winning ratio of the node as well as giving opportunity to the nodes which were traversed less often. 
+This refers to selecting the child we would like to move to from the parent node, or the action we would like to perform which would guarantee better returns in the future. The direction we choose to traverse downwards depends on the computation of the Upper Confidence Bound (UCB) formula that takes into consideration both the winning ratio of the node as well as giving opportunity to the nodes which were traversed less often. 
 
 // image of UCB //
 
@@ -26,5 +26,14 @@ At this state, we start traversing backwards / upwards from the terminal node al
 
 // image of the complete traversal of MCT //
 
+Now, to make sure that AlphaZero could work based on this, we modify the existing Monte Carlo Tree Search to Alpha MCTS by incorporating a few key changes. One of the key changes is that the process of Simulation, that is randomly playing, has been eliminated and a parameter Value has been added which was computed by the Neural Network when it evaluated a certain State / node in the tree. The other change is that a new parameter, Policy has been added which is an estimation of likelihood of selection of the child node from the parent node. A higher policy means that it is more likely that particular child node will now be more preferred. So, now the policy for selection as well as value for backpropagation are imperative.
+
+This also means that the formula for Upper Confidence Bound (UCB) has been updated. The updated formula is as follows :
+
+// updated UCB formula //
+
+Let’s say State 0 exists as the root node in the tree with no children whatsoever. It would then have the number of visits as 0, the number of wins as 0 and the policy of state as 1. The neural network finds out that the State 0 has policy distribution of 0.6 and 0.4 across its two children nodes during Expansion phase ( State 1 and State 2 which can be reached by committing Action 1 and Action 2 respectively ), as well as a Value of 0.4. Now, the backpropagation phase would increment State 0’s number of visits as 1 and the number of wins as 0.4. That is the Value that the Neural Network found out from the State before. The next time selection of the nodes is done using the updated UCB formula above and the cycle repeats until the game finishes.
+
+// Alpha MCTS //
 
 
