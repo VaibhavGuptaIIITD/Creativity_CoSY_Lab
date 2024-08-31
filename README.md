@@ -40,4 +40,4 @@ To train the model, it plays with itself in order to identify the best states an
 
 The model is trained on the basis of the dataset present, that is S (state), Pi (MCTS distribution), Z (reward) are fed in as sample data to the model, which then provides the policy and value for a given state as output. To improve the model, loss is minimized using the loss formula, using backpropagation.
 
-![Training and Loss]([readme_images2/WhatsApp Image 2024-08-31 at 13.52.30.jpeg](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/WhatsApp%20Image%202024-08-31%20at%2013.52.30.jpeg?raw=true))
+![Training and Loss](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/WhatsApp%20Image%202024-08-31%20at%2013.52.30.jpeg?raw=true)
