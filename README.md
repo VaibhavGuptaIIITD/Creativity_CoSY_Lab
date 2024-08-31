@@ -14,6 +14,8 @@ This refers to selecting the child we would like to move to from the parent node
 
 ![Upper Confidence Bound](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/WhatsApp%20Image%202024-08-31%20at%2013.52.31.jpeg?raw=true)
 
+[3]https://www.geeksforgeeks.org/upper-confidence-bound-algorithm-in-reinforcement-learning/
+
 2. **Expansion**
 
 This phase refers to creation of a new node in the tree or new state in the game, which can be done from a pre-existing parent state by taking a new action. On creation of a node, the number of wins and number of visits are initially set as 0.
