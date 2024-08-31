@@ -34,4 +34,7 @@ Let’s say State 0 exists as the root node in the tree with no children whatsoe
 
 // Alpha MCTS //
 
+To train the model, it plays with itself in order to identify the best states and their respective actions for the future. From each position, the model plays against itself on the basis of the Monte Carlo Tree Search distribution until there's an outcome to the game. 
+
+// Self Play MCTS Distribution //
 
