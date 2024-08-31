@@ -4,13 +4,11 @@ AlphaZero works with the modified version of **Monte Carlo Tree Search** which a
 
 In Monte Carlo Tree Search, we look at the current situation that the game is in right now, and the action that we can take which looks the most promising for winning the game. Consider a tree with a root node which would be considered State 0, and it has 2 children, State 1 and State 2 which can be reached by undergoing Action 1 and Action 2 respectively. For each State of the game or each node of the tree, there are 2 parameters, the number of wins that has been recorded from that node and the total number of times that node has been traversed. The overall process is divided into 4 major parts, which in sequence are as follows :
 
-// image of MCT //
-
 1. **Selection**
 
 This refers to selecting the child we would like to move to from the parent node, or the action we would like to perform which would guarantee better returns in the future. The direction we choose to traverse downwards depends on the computation of the Upper Confidence Bound (UCB) formula that takes into consideration both the winning ratio of the node as well as giving opportunity to the nodes which were traversed less often. 
 
-// image of UCB //
+![Upper Confidence Bound]()
 
 2. **Expansion**
 
@@ -24,15 +22,15 @@ This state of the game refers to playing randomly from a state until the game en
 
 At this state, we start traversing backwards / upwards from the terminal node all the way to the root node encountering all the states and actions we took earlier to reach the conclusion of the game. While traversing backwards, we increase the number of visits count by 1 for all the traversed nodes / states, as well as increment the number of wins count by either 1 or 0.5 in case of a win or draw respectively.
 
-// image of the complete traversal of MCT //
+![Monte Carlo Tree Search]()
 
 Now, to make sure that AlphaZero could work based on this, we modify the existing Monte Carlo Tree Search to **Alpha MCTS** by incorporating a few key changes. One of the key changes is that the process of Simulation, that is randomly playing, has been eliminated and a parameter Value has been added which was computed by the Neural Network when it evaluated a certain State / Node in the tree. The other change is that a new parameter, Policy has been added which is an estimation of likelihood of selection of the child node from the parent node. A higher policy means that it is more likely that particular child node will now be more preferred. So, now the policy for selection, as well as value for backpropagation are imperative. This also means that the formula for Upper Confidence Bound (UCB) has been updated. The updated formula is as follows :
 
-// updated UCB formula //
+![Updated UCB]()
 
 Let’s say State 0 exists as the root node in the tree with no children whatsoever. It would then have the number of visits as 0, the number of wins as 0 and the policy of state as 1. The neural network finds out that the State 0 has policy distribution of 0.6 and 0.4 across its two children nodes during Expansion phase ( State 1 and State 2 which can be reached by committing Action 1 and Action 2 respectively ), as well as a Value of 0.4. Now, the backpropagation phase would increment State 0’s number of visits as 1 and the number of wins as 0.4. That is the Value that the Neural Network found out from the State before. The next time selection of the nodes is done using the updated UCB formula above and the cycle repeats until the game finishes.
 
-// Alpha MCTS //
+![Alpha MCTS]()
 
 To train the model, it plays with itself in order to identify the best states and their respective actions for the future. From each position, the model plays against itself on the basis of the Monte Carlo Tree Search distribution until there's an outcome to the game. For each given state, the reward is equal to the final outcome of the player; that is the chance that the player might be in the game from that position onwards.
 
