@@ -1,6 +1,6 @@
-**ALPHAZERO IMPLEMENTATION**
+**ALPHAZERO IMPLEMENTATION** https://arxiv.org/pdf/1712.01815
 
-https://arxiv.org/pdf/1712.01815
+https://youtu.be/wuSQpLinRB4?si=TUlC5nD7B-gQaD-f
 
 AlphaZero works with the modified version of **Monte Carlo Tree Search** which aids in choice-making and game playing. It follows multiple steps and computes decisions to make sure the steps taken, whether from existing options or from expanded steps ultimately leads to the best possible output, which it improves upon by playing against itself over time. It follows the exploration-exploitation trade-off, which is making sure that choosing options which have given the best outputs till now as well as taking chances with options which haven't been chosen much as of now, in the hope that it improves later.
 
