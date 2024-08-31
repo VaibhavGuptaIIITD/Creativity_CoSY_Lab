@@ -34,7 +34,10 @@ Let’s say State 0 exists as the root node in the tree with no children whatsoe
 
 // Alpha MCTS //
 
-To train the model, it plays with itself in order to identify the best states and their respective actions for the future. From each position, the model plays against itself on the basis of the Monte Carlo Tree Search distribution until there's an outcome to the game. 
+To train the model, it plays with itself in order to identify the best states and their respective actions for the future. From each position, the model plays against itself on the basis of the Monte Carlo Tree Search distribution until there's an outcome to the game. For each given state, the reward is equal to the final outcome of the player; that is the chance that the player might be in the game from that position onwards.
 
 // Self Play MCTS Distribution //
 
+The model is trained on the basis of the dataset present, that is S (state), Pi (MCTS distribution), Z (reward) are fed in as sample data to the model, which then provides the policy and value for a given state as output. To improve the model, loss is minimized using the loss formula, using backpropagation.
+
+// Training Image //
