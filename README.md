@@ -47,7 +47,9 @@ To train the model, it plays with itself in order to identify the best states an
 ![Self Play MCTS Distribution](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/WhatsApp%20Image%202024-08-31%20at%2013.52.30%20(1).jpeg?raw=true)
 
 
-
-The model is trained on the basis of the dataset present, that is S (state), Pi (MCTS distribution), Z (reward) are fed in as sample data to the model, which then provides the policy and value for a given state as output. To improve the model, loss is minimized using the loss formula, using backpropagation.
+The model is trained on the basis of the dataset present, that is S (state), Pi (MCTS distribution), Z (reward) are fed in as sample data to the model, which then provides the policy and value for a given state as output. The optimal policy is then decided using these arguments by calculating the loss incurred on each state and thus changing the parameters and tuning them to minimise this loss. Here the loss function can be explained by dividing it into 3 parts :-
+1. **(z-v)^2**: Here z is the reward value that will be given by the MCTS tree by performing simulations of the game from a given state and v is the reward value given by the raw network. This term is minimising the difference between required reward, and the reward provided by the raw network, thus decreasing the loss. Here, the difference has been squared to keep the value positive.
+2. **pi^(T).log(p)**: In this term, pi is the probability distribution that has been given by the MCTS distribution and P is the probability distribution given by the raw network. Here in this term we are taking the dot product of both of these terms which forces the value of p to come close to the value of pi, as because more closer the value of pi and p, greater will be the value of dot product, thus decreasing the overall loss value.
+3. **c|theta|^2**: This term is reponsible for l2 regularisation. It is a form of ridge regression that is done to prevent overfitting of data by preventing the model to learn the noise and random fluctuations in the training data. This is done by modifying the training data according to the formula, where c is the regularisation coefficient.
 
 ![Training and Loss](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/WhatsApp%20Image%202024-08-31%20at%2013.52.30.jpeg?raw=true)
