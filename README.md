@@ -1,4 +1,4 @@
-**ALPHAZERO IMPLEMENTATION** https://arxiv.org/pdf/1712.01815
+**ALPHAZERO IMPLEMENTATION** https://arxiv.org/pdf/1712.01815 (AlphaZero Paper Link)
 
 [1]https://youtu.be/wuSQpLinRB4?si=TUlC5nD7B-gQaD-f (AlphaZero Video Reference 1)
 
