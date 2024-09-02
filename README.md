@@ -1,14 +1,14 @@
 **ALPHAZERO IMPLEMENTATION** https://arxiv.org/pdf/1712.01815
 
-[1]https://youtu.be/wuSQpLinRB4?si=TUlC5nD7B-gQaD-f
+[1]https://youtu.be/wuSQpLinRB4?si=TUlC5nD7B-gQaD-f (AlphaZero Video Reference 1)
 
-[2]https://youtu.be/62nq4Zsn8vc
+[2]https://youtu.be/62nq4Zsn8vc (AlphaZero Video Reference 2)
 
 AlphaZero works with the modified version of **Monte Carlo Tree Search** which aids in choice-making and game playing. It follows multiple steps and computes decisions to make sure the steps taken, whether from existing options or from expanded steps ultimately leads to the best possible output, which it improves upon by playing against itself over time. It follows the exploration-exploitation trade-off, which is making sure that choosing options which have given the best outputs till now as well as taking chances with options which haven't been chosen much as of now, in the hope that it improves later.
 
-[3]https://www.geeksforgeeks.org/ml-monte-carlo-tree-search-mcts/
+[3]https://www.geeksforgeeks.org/ml-monte-carlo-tree-search-mcts/ (MCTS)
 
-[4]https://youtu.be/UXW2yZndl7U
+[4]https://youtu.be/UXW2yZndl7U (MCTS Video Reference)
 
 In Monte Carlo Tree Search, we look at the current situation that the game is in right now, and the action that we can take which looks the most promising for winning the game. Consider a tree with a root node which would be considered State 0, and it has 2 children, State 1 and State 2 which can be reached by undergoing Action 1 and Action 2 respectively. For each State of the game or each node of the tree, there are 2 parameters, the number of wins that has been recorded from that node and the total number of times that node has been traversed. The overall process is divided into 4 major parts, which in sequence are as follows :
 
@@ -18,7 +18,7 @@ This refers to selecting the child we would like to move to from the parent node
 
 ![Upper Confidence Bound](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/WhatsApp%20Image%202024-08-31%20at%2013.52.31.jpeg?raw=true)
 
-[5]https://www.geeksforgeeks.org/upper-confidence-bound-algorithm-in-reinforcement-learning/
+[5]https://www.geeksforgeeks.org/upper-confidence-bound-algorithm-in-reinforcement-learning/ (UCB)
 
 2. **Expansion**
 
