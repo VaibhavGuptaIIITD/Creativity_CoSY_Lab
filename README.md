@@ -55,3 +55,19 @@ The model is trained on the basis of the dataset present, that is S (state), Pi 
 3. **c|theta|^2**: This term is reponsible for l2 regularisation. It is a form of ridge regression that is done to prevent overfitting of data by preventing the model to learn the noise and random fluctuations in the training data. This is done by modifying the training data according to the formula, where c is the regularisation coefficient.
 
 ![Training and Loss](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/WhatsApp%20Image%202024-08-31%20at%2013.52.30.jpeg?raw=true)
+
+Now, onto the neural network model that is used to predict the policy and value from a particular state at a particular time of the game. This is achieved in 3 distinct steps one by one:
+
+Say, there's a State at which the tic-tac-toe game is currently on, this could be represented by 3 matrices ( stored as linear lists ) of 9 elements ( 3x3 as in a tic-tac-toe ) consisting of 1s and 0s. One matrix is for player 1s moves, the position they played on is marked as 1 and the rest is 0, another matrix does the same for player -1, and the third matrix stores the empty and occupied positions currently in the game ( occupied being 1 and empty being 0 ). 
+
+This is fed into a Convolutional Neural Network, specifically a Residual Network / ResNet which is the backbone of the neural network computation here. It helps process the states first which are fed in from the above step. So, in the neural network, the inputs are fed in which in this case is the states of the tic-tac-toe game which the model processes with weights and biases as usual to compute two types of outputs, policies and values. 
+
+Now, for a model to compute outputs where there are a high possibility of solution steps, the convolutional neural network thus created is a deep one with a large number of layers to accurately predict the output. This is where the problem of vanishing and exploding gradients occur. When the neural network becomes more and more complex with a large number of layers, either the slopes of the activation functions become progressively smaller or larger as we move backward through the layers of a neural network in backpropagation. This could result in either updates becoming exponentially small, prolonging the training time / halt the training process altogether, or the gradient failing to converge and can lead to the network oscillating around local minima, making it challenging to reach the global minimum point.
+
+To come up with a solution for this problem, ResNet architecture is introduced where a technique called skip connections is used, which connects activations of a layer to further layers by skipping some layers in between forming a residual block which when stacked together forms a ResNet. The approach behind this network is instead of layers learning the underlying mapping, we allow the network to fit the residual mapping. So, instead of say H(x), initial mapping, let the network fit,  
+    
+F(x) := H(x) - x , which gives H(x) := F(x) + x.
+
+The advantage of adding this type of skip connection is that any layer that hurts the performance of architecture, will be skipped by regularization which results in training a very deep neural network without the problems caused by vanishing/exploding gradient. 
+
+Finally, the model provides two types of outputs, one being the policies for the given node and the other being the value. For the policy, the output layer is fed into a softmax function which outputs the same dimensional layer but as a probability distribution ( adding up to 1 ). For the value, the output is fed to the Tan function to make sure that the output flattens out to a number between -1 and 1. This forms the basics of how neural-network architecture works in this case.
