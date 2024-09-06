@@ -44,6 +44,10 @@ Let’s say State 0 exists as the root node in the tree with no children whatsoe
 
 [6]https://youtu.be/0slFo1rV0EM?si=Su3XllFRajJxVP4J (AlphaMCTS and Neural Network Working Video Reference)
 
+To train the model, it plays with itself in order to identify the best states and their respective actions for the future. From each position, the model plays against itself on the basis of the Monte Carlo Tree Search distribution until there's an outcome to the game. For each given state, the reward is equal to the final outcome of the player; that is the chance that the player might be in the game from that position onwards.
+
+![Self Play MCTS Distribution](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/WhatsApp%20Image%202024-08-31%20at%2013.52.30%20(1).jpeg?raw=true)
+
 Now, onto the neural network model that is used to predict the policy and value from a particular state at a particular time of the game. Say, there's a State at which the tic-tac-toe game is currently on, this could be represented by 3 matrices ( stored as linear lists ) of 9 elements ( 3x3 as in a tic-tac-toe ) consisting of 1s and 0s. One matrix is for player 1s moves, the position they played on is marked as 1 and the rest is 0, another matrix does the same for player -1, and the third matrix stores the empty and occupied positions currently in the game ( occupied being 1 and empty being 0 ). 
 
 ![Neural Network Architecture](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/PHOTO-2024-09-06-14-53-53.jpg?raw=true)
@@ -64,10 +68,6 @@ Finally, the model provides two types of outputs, one being the policies for the
 [9]https://www.analyticsvidhya.com/blog/2021/04/introduction-to-softmax-for-neural-network/ (Softmax Function)
 
 [10]https://www.ml-science.com/tanh-activation-function (Tan h function)
-
-To train the model, it plays with itself in order to identify the best states and their respective actions for the future. From each position, the model plays against itself on the basis of the Monte Carlo Tree Search distribution until there's an outcome to the game. For each given state, the reward is equal to the final outcome of the player; that is the chance that the player might be in the game from that position onwards.
-
-![Self Play MCTS Distribution](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/WhatsApp%20Image%202024-08-31%20at%2013.52.30%20(1).jpeg?raw=true)
 
 The model is trained on the basis of the dataset present, that is S (state), Pi (MCTS distribution), Z (reward) are fed in as sample data to the model, which then provides the policy and value for a given state as output. The optimal policy is then decided using these arguments by calculating the loss incurred on each state and thus changing the parameters and tuning them to minimise this loss. Here the loss function can be explained by dividing it into 3 parts :-
 1. **(z-v)^2**: Here z is the reward value that will be given by the MCTS tree by performing simulations of the game from a given state and v is the reward value given by the raw network. This term is minimising the difference between required reward, and the reward provided by the raw network, thus decreasing the loss. Here, the difference has been squared to keep the value positive.
