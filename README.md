@@ -61,8 +61,6 @@ The advantage of adding this type of skip connection is that any layer that hurt
 
 Finally, the model provides two types of outputs, one being the policies for the given node and the other being the value. For the policy, the output layer is fed into a softmax function which outputs the same dimensional layer but as a probability distribution ( adding up to 1 ). For the value, the output is fed to the Tan function to make sure that the output flattens out to a number between -1 and 1. This forms the basics of how neural-network architecture works in this case.
 
-// image of softmax and tan function //
-
 [9]https://www.analyticsvidhya.com/blog/2021/04/introduction-to-softmax-for-neural-network/ (Softmax Function)
 
 [10]https://www.ml-science.com/tanh-activation-function (Tan h function)
