@@ -78,3 +78,5 @@ The model is trained on the basis of the dataset present, that is S (state), Pi 
 3. **c|theta|^2**: This term is reponsible for l2 regularisation. It is a form of ridge regression that is done to prevent overfitting of data by preventing the model to learn the noise and random fluctuations in the training data. This is done by modifying the training data according to the formula, where c is the regularisation coefficient.
 
 [11]https://augmentingcognition.com/assets/Silver2017a.pdf (Loss Function)
+
+// Beyond this, the Neural Network Architecture repeatedly plays against itself to learn from the iterations and train on the basis of them 
