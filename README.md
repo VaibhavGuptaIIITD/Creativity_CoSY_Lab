@@ -50,7 +50,11 @@ Now, onto the neural network model that is used to predict the policy and value 
 
 This is fed into a Convolutional Neural Network, specifically a Residual Network / ResNet which is the backbone of the neural network computation here. It helps process the states first which are fed in from the above step. So, in the neural network, the inputs are fed in which in this case is the states of the tic-tac-toe game which the model processes with weights and biases as usual to compute two types of outputs, policies and values. 
 
+[7]https://www.geeksforgeeks.org/vanishing-and-exploding-gradients-problems-in-deep-learning/ (Vanishing and Exploding Gradients Reference)
+
 Now, for a model to compute outputs where there are a high possibility of solution steps, the convolutional neural network thus created is a deep one with a large number of layers to accurately predict the output. This is where the problem of vanishing and exploding gradients occur. When the neural network becomes more and more complex with a large number of layers, either the slopes of the activation functions become progressively smaller or larger as we move backward through the layers of a neural network in backpropagation. This could result in either updates becoming exponentially small, prolonging the training time / halt the training process altogether, or the gradient failing to converge and can lead to the network oscillating around local minima, making it challenging to reach the global minimum point.
+
+[8]https://www.geeksforgeeks.org/residual-networks-resnet-deep-learning/ (Residual Network Architecture)
 
 To come up with a solution for this problem, ResNet architecture is introduced where a technique called skip connections is used, which connects activations of a layer to further layers by skipping some layers in between forming a residual block which when stacked together forms a ResNet. The approach behind this network is instead of layers learning the underlying mapping, we allow the network to fit the residual mapping. So, instead of say H(x), initial mapping, let the network fit, F(x) := H(x) - x , which gives H(x) := F(x) + x.
 The advantage of adding this type of skip connection is that any layer that hurts the performance of architecture, will be skipped by regularization which results in training a very deep neural network without the problems caused by vanishing/exploding gradient. 
@@ -58,6 +62,9 @@ The advantage of adding this type of skip connection is that any layer that hurt
 Finally, the model provides two types of outputs, one being the policies for the given node and the other being the value. For the policy, the output layer is fed into a softmax function which outputs the same dimensional layer but as a probability distribution ( adding up to 1 ). For the value, the output is fed to the Tan function to make sure that the output flattens out to a number between -1 and 1. This forms the basics of how neural-network architecture works in this case.
 
 // image of softmax and tan function //
+
+[9]https://www.analyticsvidhya.com/blog/2021/04/introduction-to-softmax-for-neural-network/ (Softmax Function)
+[10]https://www.ml-science.com/tanh-activation-function (Tan h function)
 
 To train the model, it plays with itself in order to identify the best states and their respective actions for the future. From each position, the model plays against itself on the basis of the Monte Carlo Tree Search distribution until there's an outcome to the game. For each given state, the reward is equal to the final outcome of the player; that is the chance that the player might be in the game from that position onwards.
 
