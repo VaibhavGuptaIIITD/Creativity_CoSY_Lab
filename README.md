@@ -64,6 +64,7 @@ Finally, the model provides two types of outputs, one being the policies for the
 // image of softmax and tan function //
 
 [9]https://www.analyticsvidhya.com/blog/2021/04/introduction-to-softmax-for-neural-network/ (Softmax Function)
+
 [10]https://www.ml-science.com/tanh-activation-function (Tan h function)
 
 To train the model, it plays with itself in order to identify the best states and their respective actions for the future. From each position, the model plays against itself on the basis of the Monte Carlo Tree Search distribution until there's an outcome to the game. For each given state, the reward is equal to the final outcome of the player; that is the chance that the player might be in the game from that position onwards.
