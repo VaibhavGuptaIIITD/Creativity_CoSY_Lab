@@ -46,7 +46,7 @@ Let’s say State 0 exists as the root node in the tree with no children whatsoe
 
 Now, onto the neural network model that is used to predict the policy and value from a particular state at a particular time of the game. Say, there's a State at which the tic-tac-toe game is currently on, this could be represented by 3 matrices ( stored as linear lists ) of 9 elements ( 3x3 as in a tic-tac-toe ) consisting of 1s and 0s. One matrix is for player 1s moves, the position they played on is marked as 1 and the rest is 0, another matrix does the same for player -1, and the third matrix stores the empty and occupied positions currently in the game ( occupied being 1 and empty being 0 ). 
 
-![Neural Network Architecture]()
+![Neural Network Architecture](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/PHOTO-2024-09-06-14-53-53.jpg?raw=true)
 
 This is fed into a Convolutional Neural Network, specifically a Residual Network / ResNet which is the backbone of the neural network computation here. It helps process the states first which are fed in from the above step. So, in the neural network, the inputs are fed in which in this case is the states of the tic-tac-toe game which the model processes with weights and biases as usual to compute two types of outputs, policies and values. 
 
