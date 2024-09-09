@@ -85,7 +85,7 @@ From the memory stored while playing against itself ( states, policies and value
 
 Now, the losses are computed, policy loss ( uses cross-entropy loss to measure how well the predicted policy matches the target policy ), value loss ( uses the mean squared error to measure the difference between the predicted game outcome i.e. and the actual outcome ) and the total loss that is the sum of both the policy and value loss. Backpropagation is then performed, to calculate the gradients of the loss with respect to the model parameters, as well as the optimizer updating the model parameters using the gradients.
 
-Also, the existing model is tweaked to optimize the code further to make it more efficient for playing tic-tac-toe. A temperature parameter is added upon that controls how much the Monte CArlo Tree Search can explore………..
+Also, the existing model is tweaked to optimize the code further to make it more efficient for playing tic-tac-toe. A temperature parameter is added upon that controls how much the Monte Carlo Tree Search can explore further ......
 
 // image of the alpha tweaks formula // 
 
