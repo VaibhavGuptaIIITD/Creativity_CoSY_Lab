@@ -78,3 +78,17 @@ The model is trained on the basis of the dataset present, that is S (state), Pi 
 3. **c|theta|^2**: This term is reponsible for l2 regularisation. It is a form of ridge regression that is done to prevent overfitting of data by preventing the model to learn the noise and random fluctuations in the training data. This is done by modifying the training data according to the formula, where c is the regularisation coefficient.
 
 [11]https://augmentingcognition.com/assets/Silver2017a.pdf (Loss Function)
+
+The model plays against itself, making sure it stores its state, action probabilities, and the player's identity as the game progresses. The MCTS algorithm is utilized here to make sure that the future possibilities have been explored and probabilities calculated usually by simulating possible games and computing ratios of wins. The current states, action probabilities and player is stored to make sure that it could be latest used to train the model. From all the actions stored in memory, one of them is selected at random with its probability distribution which acts as a simulation, and state / action values are updated accordingly. Again, it's checked who won, lost or drawn when the game has ended.
+
+From the memory stored while playing against itself ( states, policies and values ), are provided to the model for training in a shuffled random order. The data is divided into batches to train efficiently in chunks of training data. The memory ( states, policies and values ) are converted and stored in the form of individual lists, and then converted to numpy arrays for easy manipulation and reshaping as required. When fed in the state as input, it outputs the policy and the value. 
+
+Now, the losses are computed, policy loss ( uses cross-entropy loss to measure how well the predicted policy matches the target policy ), value loss ( uses the mean squared error to measure the difference between the predicted game outcome i.e. and the actual outcome ) and the total loss that is the sum of both the policy and value loss. Backpropagation is then performed, to calculate the gradients of the loss with respect to the model parameters, as well as the optimizer updating the model parameters using the gradients.
+
+Also, the existing model is tweaked to optimize the code further to make it more efficient for playing tic-tac-toe. A temperature parameter is added upon that controls how much the Monte CArlo Tree Search can explore………..
+
+// image of the alpha tweaks formula // 
+
+It was also found that upon changing the parameters / regulations of the game , such as say increasing the board size to 8x8 and making the rules such that any 4 in a line wins, etc.could be achieved by changing the functions a bit with more computational GPU power. 
+
+Now we try to implement the existing AlphaZero algorithm with parallel self-play games to speed up training. First, multiple parallel games are played, simulated and stored in memory to train the model later. Again, the memory is shuffled for randomization, and then divided into batches as well as python tensors for efficient model training. The model then runs and estimates the policy and value for each state, as well as the policy , value and total loss is computed. Gradients are then cleared, the loss is back propagated, and the optimizer updates the model parameters, and finally the model learns by alternating between playing with itself and training from the data provided.
