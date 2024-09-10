@@ -90,5 +90,3 @@ Also, the existing model is tweaked to optimize the code further to make it more
 // Dirichlet distribution //
 
 It was also found that upon changing the parameters / regulations of the game , such as say increasing the board size to 8x8 and making the rules such that any 4 in a line wins, etc. could be achieved by changing the functions a bit with more computational GPU power. 
-
-Now we try to implement the existing AlphaZero algorithm with parallel self-play games to speed up training. First, multiple parallel games are played, simulated and stored in memory to train the model later. Again, the memory is shuffled for randomization, and then divided into batches as well as python tensors for efficient model training. The model then runs and estimates the policy and value for each state, as well as the policy , value and total loss is computed. Gradients are then cleared, the loss is back propagated, and the optimizer updates the model parameters, and finally the model learns by alternating between playing with itself and training from the data provided.
