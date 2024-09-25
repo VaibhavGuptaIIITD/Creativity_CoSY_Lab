@@ -4,7 +4,7 @@ Real-world problems cannot just function with a tree-based planning method, as t
 
 // model based RL reference //
  
-**Model-based Reinforcement Learning** learns a model of the environment’s dynamics, that is, it first constructs the state representation that the model should predict and then plans with respect to the learned model. Represented by Markov’s Decision Process / MDP, it has next-state prediction and expected reward prediction; MCTS is applied to compute the optimal value or optimal policy. All of this is an issue since the agent is not able to optimize its representation or model for the purpose of effective planning (modeling errors may compound during planning). To improve this,  predicting the value function is useful as they construct an abstract MDP model that is equivalent to planning in the real environment (using value equivalence, starting from the same real state, the cumulative reward of a trajectory through the abstract MDP matches the cumulative reward of a trajectory in the real environment). The MDP model is viewed as a hidden layer of the network, and unrolled MDP is trained such that the expected cumulative sum of rewards matches the expected value with respect to the real environment (as there is no requirement for its transition model to match real states in the environment).
+**Model-based Reinforcement Learning** learns a model of the environment’s dynamics; that is, it first constructs the state representation that the model should predict and then plans with respect to the learned model. Represented by Markov’s Decision Process / MDP, it has next-state prediction and expected reward prediction; MCTS is applied to compute the optimal value or optimal policy. All of this is an issue since the agent cannot optimize its representation or model for effective planning (modeling errors may compound during planning). To improve this,  predicting the value function is useful as they construct an abstract MDP model that is equivalent to planning in the real environment (using value equivalence, starting from the same real state, the cumulative reward of a trajectory through the abstract MDP matches the cumulative reward of a trajectory in the real environment). The MDP model is viewed as a hidden layer of the network, and unrolled MDP is trained such that the expected cumulative sum of rewards matches the expected value with respect to the real environment (as there is no requirement for its transition model to match real states in the environment).
 
 // image consisting of connected arrows of muzero //
 
@@ -42,35 +42,30 @@ We further normalize the combined reward/value estimate to lie in the interval [
 
 where qmin and qmax are the minimum and maximum **r(s,a)+γ⋅v(s')** estimates observed across the search tree.
 
-// image of MuZero ka 3 parts //
-
-The model consists of three interconnected parts:
-
-**Representation** function (h)
-which encodes the environment observation into a hidden state.
-
-**Dynamics** function (g) 
-that predicts the next hidden state and immediate reward given the current state and action.
-
-**Prediction** function (f)
-which computes policy and value estimates from the hidden state.
-
 **MuZero Algorithm**
 
 **1. Planning and Episode Generation**
-Starting from an initial hidden state s^0, MuZero plans by iteratively applying the dynamics function g. For each action a^k, it predicts the next state s^k and immediate reward r^k. The prediction function f then estimates the policy p^k and value v^k for each new state. This creates a tree of possible future states and actions.
 
-MuZero uses Monte Carlo Tree Search (MCTS) at each timestep t. The search tree is built using the learned model, starting from the current state.
-Actions are sampled based on the visit count of each node, forming a search policy π_t. The final action a_t+1 is chosen based on this search policy. The environment then provides a new observation o_t+1 and reward u_t+1.
+The MCTS procedure described above can be applied repeatedly to play entire episodes:
+
+- Run a search in the environment's current state s(t).
+- Select an action a(t+1) according to the statistics π(t) of the search.
+- Apply the action to the environment to advance to the next state s(t+1) and observe reward u(t+1).
+- Repeat until the environment terminates.
 
 **2. Training**
-MuZero learns from experience stored in a replay buffer. For training, it samples trajectories from past games or episodes. The representation function h processes the initial observation to get s^0. The model is then unrolled for K steps, using the dynamics function g to predict subsequent states and rewards. At each step, the prediction function f estimates policy, value, and reward. The model is trained end-to-end using backpropagation through time to minimize the difference between predicted and actual outcomes.
 
-**3. Reanalyzing**
+We sample a trajectory and a position within it from our dataset, and then we unroll the MuZero model alongside the trajectory.
 
-// image tic-tac-toe //
+// image of training //
 
-**Loss Function of MuZero**
+// image of MuZero ka 3 parts //
+
+- the representation function h maps from a set of observations to the hidden state s used by the neural network
+- the dynamics function g maps from a state s(t) to the next state s(t+1), it also estimates the reward r(t) observed in this transition (this allows the learned model to roll forward inside the search)
+- the prediction function f makes estimates for policy p(t) and value v(t) based on a state s(t). These estimates are used by the UCB formula and aggregated in the MCTS.
+
+The observations and actions used as input to the network are taken from this trajectory; similarly, the prediction targets for policy, value, and reward are stored with the trajectory when generated. 
 
 MuZero has three primary learning objectives for every hypothetical **step K**
 
@@ -83,6 +78,12 @@ Minimize the error between the predicted value vt^k and the value target z(t+k) 
 **Reward Objective**
 Minimize the error between the predicted reward rt^k and the observed reward u(t+k) (ensures that the model learns to predict the rewards it will receive accurately)
 
-The overall loss function for MuZero is a combination of the policy, value, and reward losses, along with an **L2 regularization term**.
+The overall **Loss Function for MuZero** is a combination of the policy, value, and reward losses, along with an **L2 regularization term**.
 
 // overall loss function //
+
+**3. Reanalyzing**
+
+
+
+// image tic-tac-toe //
