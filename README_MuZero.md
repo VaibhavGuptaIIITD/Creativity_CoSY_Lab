@@ -1,4 +1,4 @@
-**MUZERO** //muzero paper link//
+**MUZERO** 
 
 Real-world problems cannot just function with a tree-based planning method, as the dynamics are complex and unknown. Until now, all the models know the environment’s dynamics or have a perfect simulator. Model-free RL estimates the optimal policy and/or value function directly from interactions with the environment but isn’t accurate at all.
 
