@@ -9,6 +9,7 @@ Real-world problems cannot just function with a tree-based planning method, as t
 **-------------------------------------------------------------------------------------------------------------**
 
 [2] https://deepmind.google/discover/blog/muzero-mastering-go-chess-shogi-and-atari-without-rules/ (MuZero DeepMind Blog)
+
 [3] https://www.furidamu.org/blog/2020/12/22/muzero-intuition/ (MuZero Intuition)
 
 **MuZero Algorithm** combines tree-based search with a learned model and achieves results without any knowledge of the game's dynamics. MuZero builds upon AlphaZero’s search and search-based policy iteration algorithms and incorporates a learned model into the training procedure. It extends AlphaZero to broader environments, including single-agent domains and non-zero rewards at intermediate time steps.
@@ -113,3 +114,6 @@ Two jobs are introduced to implement reanalyze:
 // image tic-tac-toe //
 
 **-------------------------------------------------------------------------------------------------------------**
+
+https://github.com/werner-duvaud/muzero-general (Baisc MuZero Implementation)
+https://medium.com/applied-data-science/how-to-build-your-own-muzero-in-python-f77d5718061a (MuZero Basic Pseudocode)
