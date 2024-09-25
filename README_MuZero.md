@@ -99,7 +99,8 @@ Minimize the error between the predicted reward rt^k and the observed reward u(t
 
 The overall **Loss Function for MuZero** is a combination of the policy, value, and reward losses, along with an **L2 regularization term**.
 
-// overall loss function //
+![loss function]()
+![background of loss function]()
 
 **-------------------------------------------------------------------------------------------------------------**
 
