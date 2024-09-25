@@ -25,7 +25,7 @@ The algorithm receives observation as input and transforms it to a hidden state 
 **Simulation** always starts at the root of the tree (light blue circle at the top of the figure), the current position in the environment or game. At each node (**state s**), it uses a scoring function **U(s,a)** to compare different actions **a** and choose the most promising one. The scoring function used in MuZero would combine a prior estimate **p(s,a)** with the value estimate for **v(s,a)**.
 
 ----------------------------
-**U(s,a)=v(s,a) + c⋅p(s,a)**
+**U(s,a) = v(s,a) + c⋅p(s,a)**
 ----------------------------
 
 where c is a scaling factor ( that ensures that the influence of the prior diminishes as our value estimate becomes more accurate )
@@ -42,7 +42,10 @@ There is no constraint for the hidden state to capture all information necessary
 
 **Immediate Rewards** also have to be considered as frequent feedback; generally, a **reward r** is observed after every transition from one state to the next.
 
-**U(s,a)=r(s,a)+γ⋅v(s')+c⋅p(s,a)**
+
+----------------------------
+**U(s,a) = r(s,a) + γ⋅v(s') + c⋅p(s,a)**
+----------------------------
 
 where r(s,a) is the reward observed in transitioning from state s by choosing action a, and γ is a discount factor that describes how much we care about future rewards.
 
