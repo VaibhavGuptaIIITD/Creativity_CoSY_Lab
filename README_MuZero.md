@@ -16,7 +16,7 @@ Real-world problems cannot just function with a tree-based planning method, as t
 
 The algorithm receives observation as input and transforms it to a hidden state which is updated iteratively using its next action. At each step, the model predicts the policy (the move to play), value function (the predicted winner), and immediate reward (the points scored by playing a move); and the objective is to estimate these quantities accurately to match the ones found by the MCTS.
 
-// image of the tree //
+![MuZero Tree](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/Screenshot%202024-09-25%20at%203.42.10%20PM.png?raw=true)
 
 **MuZero MCTS**
 
