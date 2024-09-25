@@ -30,11 +30,11 @@ The algorithm receives observation as input and transforms it to a hidden state,
 
 where c is a scaling factor ( that ensures that the influence of the policy diminishes as our value estimate becomes more accurate )
 
-Each time an action is selected, we increment its associated visit count **n(s,a)** for use in the scaling factor c and later action selection. The simulation proceeds down the tree until it reaches a leaf that has not yet been expanded; at this point, the neural network is used to evaluate the node. Evaluation results (prior and value estimates) are stored in the node.
+Each time an action is selected, we increment its associated visit count **n(s,a)** for use in the scaling factor c and later action selection. The simulation proceeds down the tree until it reaches a leaf that has not yet been expanded; at this point, the neural network is used to evaluate the node. Evaluation results (policy and value estimates) are stored in the node.
 
-**Expansion** occurs once a node has reached a certain number of evaluations. Being expanded means that children can be added to a node; this allows the search to proceed deeper. In MuZero, the expansion threshold is 1, i.e. every node is expanded immediately after it is evaluated for the first time.
+**Expansion** occurs once a node has reached a certain number of evaluations. Being expanded means that children can be added to a node; this allows the search to proceed deeper. In MuZero, the expansion threshold is **1**, i.e. every node is expanded immediately after it is evaluated for the first time.
 
-**Backpropagation** occurs as the value estimate from the neural network evaluation is propagated back up the search tree; each node keeps a running mean of all value estimates below it. This averaging process allows the UCB formula to make increasingly accurate decisions over time, ensuring that the MCTS eventually converges to the best move.
+**Backpropagation** occurs as the value estimate from the neural network evaluation is propagated back up the search tree; each node keeps a running **mean** of all value estimates below it. This averaging process allows the UCB formula to make increasingly accurate decisions over time, ensuring that the MCTS eventually converges to the best move.
 
 **-------------------------------------------------------------------------------------------------------------**
 
