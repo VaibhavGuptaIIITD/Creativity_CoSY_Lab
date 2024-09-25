@@ -12,6 +12,8 @@ Real-world problems cannot just function with a tree-based planning method, as t
 
 [3] https://www.furidamu.org/blog/2020/12/22/muzero-intuition/ (MuZero Intuition)
 
+[4]https://youtu.be/A0HX8BgckFI?si=e1Dq5clQq9qV19mf (AlphaGo to MuZero Video)
+
 **MuZero Algorithm** combines tree-based search with a learned model and achieves results without any knowledge of the game's dynamics. MuZero builds upon AlphaZero’s search and search-based policy iteration algorithms and incorporates a learned model into the training procedure. It extends AlphaZero to broader environments, including single-agent domains and non-zero rewards at intermediate time steps.
 
 The algorithm receives observation as input and transforms it to a hidden state which is updated iteratively using its next action. At each step, the model predicts the policy (the move to play), value function (the predicted winner), and immediate reward (the points scored by playing a move); and the objective is to estimate these quantities accurately to match the ones found by the MCTS.
