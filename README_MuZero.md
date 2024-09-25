@@ -67,9 +67,8 @@ The MCTS procedure described above can be applied repeatedly to play entire epis
 
 We sample a trajectory and a position within it from our dataset, and then we unroll the MuZero model alongside the trajectory.
 
-// image of training //
+![training](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/Screenshot%202024-09-25%20at%203.41.22%20PM.png?raw=true)
 
-// image of MuZero ka 3 parts //
 
 - the representation function h maps from a set of observations to the hidden state s used by the neural network
 - the dynamics function g maps from a state s(t) to the next state s(t+1), it also estimates the reward r(t) observed in this transition (this allows the learned model to roll forward inside the search)
