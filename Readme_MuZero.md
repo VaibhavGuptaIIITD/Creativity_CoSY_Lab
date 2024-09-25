@@ -34,7 +34,7 @@ where r(s,a) is the reward observed in transitioning from state s by choosing ac
 
 We further normalize the combined reward/value estimate to lie in the interval [0,1] before combining it with the prior:
 
-**U(s,a) = ( r(s,a) + γ⋅v(s') − qmin ) / ( qmax − qmin ) + c⋅p(s,a)**
+**U(s,a) = [ ( r(s,a) + γ⋅v(s') − qmin ) / ( qmax − qmin ) ] + c⋅p(s,a)**
 
 where qmin and qmax are the minimum and maximum r(s,a)+γ⋅v(s') estimates observed across the search tree.
 
