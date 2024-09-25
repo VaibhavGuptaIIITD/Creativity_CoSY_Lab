@@ -80,9 +80,9 @@ We sample a trajectory and a position within it from our dataset, and then we un
 ![training](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/Screenshot%202024-09-25%20at%203.41.22%20PM.png?raw=true)
 
 
-- the representation function h maps from a set of observations to the hidden state s used by the neural network
-- the dynamics function g maps from a state s(t) to the next state s(t+1), it also estimates the reward r(t) observed in this transition (this allows the learned model to roll forward inside the search)
-- the prediction function f makes estimates for policy p(t) and value v(t) based on a state s(t). These estimates are used by the UCB formula and aggregated in the MCTS.
+- the **representation function h** maps from a set of observations to the hidden state s used by the neural network
+- the **dynamics function g** maps from a state s(t) to the next state s(t+1), it also estimates the reward r(t) observed in this transition (this allows the learned model to roll forward inside the search)
+- the **prediction function f** makes estimates for policy p(t) and value v(t) based on a state s(t). These estimates are used by the UCB formula and aggregated in the MCTS.
 
 The observations and actions used as input to the network are taken from this trajectory; similarly, the prediction targets for policy, value, and reward are stored with the trajectory when generated. 
 
