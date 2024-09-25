@@ -116,4 +116,5 @@ Two jobs are introduced to implement reanalyze:
 **-------------------------------------------------------------------------------------------------------------**
 
 https://github.com/werner-duvaud/muzero-general (Baisc MuZero Implementation)
+
 https://medium.com/applied-data-science/how-to-build-your-own-muzero-in-python-f77d5718061a (MuZero Basic Pseudocode)
