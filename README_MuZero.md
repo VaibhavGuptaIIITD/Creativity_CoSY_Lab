@@ -6,6 +6,8 @@ Real-world problems cannot just function with a tree-based planning method, as t
  
 **Model-based Reinforcement Learning** learns a model of the environment’s dynamics; that is, it first constructs the state representation that the model should predict and then plans with respect to the learned model. Represented by Markov’s Decision Process / MDP, it has next-state prediction and expected reward prediction; MCTS is applied to compute the optimal value or optimal policy. All of this is an issue since the agent cannot optimize its representation or model for effective planning (modeling errors may compound during planning). To improve this,  predicting the value function is useful as they construct an abstract MDP model that is equivalent to planning in the real environment (using value equivalence, starting from the same real state, the cumulative reward of a trajectory through the abstract MDP matches the cumulative reward of a trajectory in the real environment). The MDP model is viewed as a hidden layer of the network, and unrolled MDP is trained such that the expected cumulative sum of rewards matches the expected value with respect to the real environment (as there is no requirement for its transition model to match real states in the environment).
 
+**-------------------------------------------------------------------------------------------------------------**
+
 // image consisting of connected arrows of muzero //
 
 **MuZero Algorithm** combines tree-based search with a learned model and achieves results without any knowledge of the game's dynamics. MuZero builds upon AlphaZero’s search and search-based policy iteration algorithms and incorporates a learned model into the training procedure. It extends AlphaZero to broader environments, including single-agent domains and non-zero rewards at intermediate time steps.
@@ -28,6 +30,8 @@ Each time an action is selected, we increment its associated visit count **n(s,a
 
 **Backpropagation** occurs as the value estimate from the neural network evaluation is propagated back up the search tree; each node keeps a running mean of all value estimates below it. This averaging process allows the UCB formula to make increasingly accurate decisions over time, ensuring that the MCTS eventually converges to the best move.
 
+**-------------------------------------------------------------------------------------------------------------**
+
 There is no constraint for the hidden state to capture all information necessary to reconstruct the original observation or match the unknown/true state of the environment, reducing the information it must maintain. The hidden state is free to represent the state in whatever way is relevant to predicting current and future values and policies, meaning it can invent the rules or dynamics that lead to the most accurate planning.
 
 **Immediate Rewards** also have to be considered as frequent feedback; generally, a **reward r** is observed after every transition from one state to the next.
@@ -42,6 +46,8 @@ We further normalize the combined reward/value estimate to lie in the interval [
 
 where qmin and qmax are the minimum and maximum **r(s,a)+γ⋅v(s')** estimates observed across the search tree.
 
+**-------------------------------------------------------------------------------------------------------------**
+
 **MuZero Algorithm**
 
 **1. Planning and Episode Generation**
@@ -52,6 +58,8 @@ The MCTS procedure described above can be applied repeatedly to play entire epis
 - Select an action a(t+1) according to the statistics π(t) of the search.
 - Apply the action to the environment to advance to the next state s(t+1) and observe reward u(t+1).
 - Repeat until the environment terminates.
+
+**-------------------------------------------------------------------------------------------------------------**
 
 **2. Training**
 
@@ -82,8 +90,26 @@ The overall **Loss Function for MuZero** is a combination of the policy, value, 
 
 // overall loss function //
 
+**-------------------------------------------------------------------------------------------------------------**
+
 **3. Reanalyzing**
 
+Having examined the core MuZero training, we are ready to take a look at the technique that allows us to leverage the search to achieve massive data-efficiency improvements: Reanalyse.
 
+In the course of normal training, we generate many trajectories (interactions with the environment) and store them in our replay buffer for training. Can we get more mileage out of this data?
+
+sequence of states representing an episode
+
+Unfortunately, since this is stored data, we cannot change the states, actions or received rewards - this would require resetting the environment to an arbitrary state and continuing from there. Possible in The Matrix, but not in the real world.
+
+Luckily, it turns out that we don't need to - using existing inputs with fresh, improved labels is enough for continued learning. Thanks to MuZero's learned model and the MCTS, this is exactly what we can do:
+
+sequence of states with new MCTS trees at each state
+
+We keep the saved trajectory (observations, actions and rewards) as is and instead only re-run the MCTS. This generates fresh search statistics, providing us with new targets for the policy and value prediction.
+
+In the same way that searching with an improved network results in better search statistics when interacting with the environment directly, re-running the search with an improved network on saved trajectories also results in better search statistics, allowing for repeated improvements using the same trajectory data.
 
 // image tic-tac-toe //
+
+**-------------------------------------------------------------------------------------------------------------**
