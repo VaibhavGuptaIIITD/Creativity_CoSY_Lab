@@ -99,7 +99,7 @@ The overall **Loss Function for MuZero** is a combination of the policy, value, 
 While training, we generated many trajectories and stored them in the replay buffer, but as this is stored already, we cannot change states, actions, or received rewards as this would reset the environment. 
 What we can do is use existing inputs with fresh, improved labels is enough for continued learning using MuZero's learned model and the MuZero MCTS. We keep the saved trajectory (observations, actions, and rewards) as is and instead only re-run the MCTS. This generates fresh search statistics, providing us with new targets for the policy and value prediction.
 
-// reanalyze image //
+![reanalyze image](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/Screenshot%202024-09-25%20at%203.40.47%20PM.png?raw=true)
 
 Two sets of jobs that communicate with each other asynchronously:
 
