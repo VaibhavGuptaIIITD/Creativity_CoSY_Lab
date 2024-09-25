@@ -2,7 +2,7 @@
 
 Real-world problems cannot just function with a tree-based planning method, as the dynamics are complex and unknown. Until now, all the models know the environment’s dynamics or have a perfect simulator. Model-free RL estimates the optimal policy and/or value function directly from interactions with the environment but isn’t accurate at all.
 
-// model based RL reference //
+[1] https://bair.berkeley.edu/blog/2019/12/12/mbpo/ (Model-Based Reinforcement Learning)
  
 **Model-based Reinforcement Learning** learns a model of the environment’s dynamics; that is, it first constructs the state representation that the model should predict and then plans with respect to the learned model. Represented by Markov’s Decision Process / MDP, it has next-state prediction and expected reward prediction; MCTS is applied to compute the optimal value or optimal policy. All of this is an issue since the agent cannot optimize its representation or model for effective planning (modeling errors may compound during planning). To improve this,  predicting the value function is useful as they construct an abstract MDP model that is equivalent to planning in the real environment (using value equivalence, starting from the same real state, the cumulative reward of a trajectory through the abstract MDP matches the cumulative reward of a trajectory in the real environment). The MDP model is viewed as a hidden layer of the network, and unrolled MDP is trained such that the expected cumulative sum of rewards matches the expected value with respect to the real environment (as there is no requirement for its transition model to match real states in the environment).
 
