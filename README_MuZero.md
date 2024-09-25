@@ -16,21 +16,21 @@ Real-world problems cannot just function with a tree-based planning method, as t
 
 **MuZero Algorithm** combines tree-based search with a learned model and achieves results without any knowledge of the game's dynamics. MuZero builds upon AlphaZero’s search and search-based policy iteration algorithms and incorporates a learned model into the training procedure. It extends AlphaZero to broader environments, including single-agent domains and non-zero rewards at intermediate time steps.
 
-The algorithm receives observation as input and transforms it to a hidden state which is updated iteratively using its next action. At each step, the model predicts the policy (the move to play), value function (the predicted winner), and immediate reward (the points scored by playing a move); and the objective is to estimate these quantities accurately to match the ones found by the MCTS.
+The algorithm receives observation as input and transforms it to a hidden state, which is updated iteratively using its next action. At each step, the model predicts the policy (the move to play), value function (the predicted winner), and immediate reward (the points scored by playing a move); and the objective is to estimate these quantities accurately to match the ones found by the MCTS.
 
 ![MuZero Tree](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/Screenshot%202024-09-25%20at%203.42.10%20PM.png?raw=true)
 
 **MuZero MCTS**
 
-**Simulation** always starts at the root of the tree (light blue circle at the top of the figure), the current position in the environment or game. At each node (**state s**), it uses a scoring function **U(s,a)** to compare different actions **a** and choose the most promising one. The scoring function used in MuZero would combine a prior estimate **p(s,a)** with the value estimate for **v(s,a)**.
+**Simulation** always starts at the root of the tree, the current position in the environment or game. At each node (**state s**), it uses a scoring function **U(s,a)** to compare different actions **a** and choose the most promising one. The scoring function used in MuZero would combine a policy estimate **p(s,a)** with the value estimate for **v(s,a)**.
 
 ----------------------------
 **U(s,a) = v(s,a) + c⋅p(s,a)**
 ----------------------------
 
-where c is a scaling factor ( that ensures that the influence of the prior diminishes as our value estimate becomes more accurate )
+where c is a scaling factor ( that ensures that the influence of the policy diminishes as our value estimate becomes more accurate )
 
-Each time an action is selected, we increment its associated visit count **n(s,a)** for use in the UCB scaling factor c and later action selection. Simulation proceeds down the tree until it reaches a leaf that has not yet been expanded; at this point, the neural network is used to evaluate the node. Evaluation results (prior and value estimates) are stored in the node.
+Each time an action is selected, we increment its associated visit count **n(s,a)** for use in the scaling factor c and later action selection. The simulation proceeds down the tree until it reaches a leaf that has not yet been expanded; at this point, the neural network is used to evaluate the node. Evaluation results (prior and value estimates) are stored in the node.
 
 **Expansion** occurs once a node has reached a certain number of evaluations. Being expanded means that children can be added to a node; this allows the search to proceed deeper. In MuZero, the expansion threshold is 1, i.e. every node is expanded immediately after it is evaluated for the first time.
 
