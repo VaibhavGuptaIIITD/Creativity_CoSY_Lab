@@ -61,6 +61,8 @@ The MCTS procedure described above can be applied repeatedly to play entire epis
 - Apply the action to the environment to advance to the next state s(t+1) and observe reward u(t+1).
 - Repeat until the environment terminates.
 
+![Episode Generation](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/Screenshot%202024-09-25%20at%203.41.48%20PM.png?raw=true)
+
 **-------------------------------------------------------------------------------------------------------------**
 
 **2. Training**
