@@ -138,3 +138,11 @@ Evaluate how well the adapted MuZero folds proteins:-
 - Test it on known structures and compare predictions to experimental results.
 - Analyze how efficiently it explores the folding landscape (does it find correct structures quickly?).
 - Refine the reward function, action space, and model architecture as needed.
+
+REFERENCES
+
+[Protein Structure, Nature](https://www.nature.com/scitable/topicpage/protein-structure-14122136/)
+
+[](https://pmc.ncbi.nlm.nih.gov/articles/PMC2443096/#S19)
+
+[](https://www.nature.com/articles/s41586-021-03819-2)
