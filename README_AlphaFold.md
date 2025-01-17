@@ -143,6 +143,6 @@ REFERENCES
 
 [Protein Structure, Nature](https://www.nature.com/scitable/topicpage/protein-structure-14122136/)
 
-[](https://pmc.ncbi.nlm.nih.gov/articles/PMC2443096/#S19)
+[Protein Folding Problem, National Library of Medicine](https://pmc.ncbi.nlm.nih.gov/articles/PMC2443096/#S19)
 
-[](https://www.nature.com/articles/s41586-021-03819-2)
+[AlphaFold Paper](https://www.nature.com/articles/s41586-021-03819-2)
