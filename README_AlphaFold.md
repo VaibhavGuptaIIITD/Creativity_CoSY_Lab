@@ -17,6 +17,72 @@ Can we look at a protein's building blocks (amino acids) and predict future shap
 Anfinsen’s Thermodynamic Hypothesis - Proteins fold into their final shape naturally, based only on their building blocks (amino acids) and their environment, irrespective of how it’s made, that is test tube proteins will fold the same way as a cell one. Also, protein folding follows the rule of chemistry. 
 
 Hydrophobic Interaction, that is how parts of the protein's building blocks avoid water, was found to be one of the major reasons for protein folding. Proteins have water avoiding cores which are moved into oil-like environments taking up a certain amount of energy. So, Proteins unfold in oils and even when you mix up a protein's sequence, keeping only the pattern of water-loving and water-avoiding parts, it still folds correctly. Other important forces such as Hydrogen bonds, Van der Waals forces and Electrical charges also help determine the final shape after protein folding.
-So how does this string know how to fold into exactly the right shape in just microseconds, when there are countless possible ways it could fold? The Funnel Concept is that, imagine you're on top of a mountain with a ball, and there's a valley below. No matter where you release the ball, it will eventually roll down to the bottom. Proteins work similarly, The unfolded protein starts at the top of the "energy funnel".Different molecules might take different paths down but they all end up in the same final shape at the bottom. This explains why proteins reliably fold into the same shape every time
+
+So how does this string know how to fold into exactly the right shape in just microseconds, when there are countless possible ways it could fold? The Funnel Concept is that, imagine you're on top of a mountain with a ball, and there's a valley below. No matter where you release the ball, it will eventually roll down to the bottom. Proteins work similarly, The unfolded protein starts at the top of the "energy funnel".Different molecules might take different paths down but they all end up in the same final shape at the bottom. This explains why proteins reliably fold into the same shape every time.
+
 In proteins, small sections fold into simpler structures, then these small pieces combine into larger sections. Finally, the larger sections come together to make the final structure, and folding occurs after every combination. The complexity of the final shape largely determines the folding speed of the protein. 
+
 Zipping and Assembly Method (ZAM) is used to predict protein structures. The protein chain is divided into small segments of 8 amino acids each which are simulated independently for sampling of possible conformations at different temperatures. Fragments that show stable structures are identified and are then extended by adding additional amino acids. New simulations are performed on these extended fragments and this process repeats till stable structures are formed. Stable fragments that could potentially interact are identified and are simulated together to see if they form stable interactions.
+
+**ALPHAFOLD**
+
+AlphaFold is a complex neural network that predicts 3D protein structures from amino acid sequences. It has two main stages:
+
+1. Trunk stage- This stage processes the input data, including the amino acid sequence and aligned sequences of similar proteins (MSA). It uses repeated layers of a novel neural network block called Evoformer to produce two arrays: one representing the processed MSA and another representing residue pairs.
+
+2. Structure module- This stage introduces an explicit 3D structure, using rotation and translation for each residue. It refines the structure through iterative refinement, using a novel equivariant transformer and a loss term that emphasizes orientational correctness.
+
+Key innovations include:
+
+- Evoformer blocks for exchanging information within MSA and pair representations
+- Equivariant transformer for implicit reasoning about unrepresented side-chain atoms
+- Iterative refinement through "recycling" of outputs
+- Loss term emphasizing 
+
+The Evoformer is a building block of the AlphaFold network that predicts protein structures. It views the prediction problem as a graph inference problem in 3D space.
+
+1. MSA (Multiple Sequence Alignment) representation: Encodes information about individual residues and their sequences.
+2. Pair representation: Encodes relationships between residues, such as distances and angles.
+
+MSA updates pair representation through an element-wise outer product, enabling continuous communication between MSA and pair representations. 
+
+The structure module takes the pair representation and the original sequence row (single representation) from the trunk and predicts the 3D backbone structure of the protein.
+
+1. Residue Gas Representation is for the 3D backbone structure as Nres independent rotations and translations.
+2. Invariant Point Attention (IPA) updates neural activations without changing 3D positions, using geometry-aware attention.
+3. Equivariant Update Operation updates the residue gas representation using the updated activations.
+
+Loss Function compares predicted atom positions to true positions under multiple alignments, using a clamped L1 loss. This encourages atoms to be correct relative to the local frame of each residue.
+
+AlphaFold is initially trained on labelled data from the Protein Data Bank (PDB). The trained network predicts structures for 350,000 diverse sequences, creating a new dataset. The network is re-trained using both labelled PDB data and the new dataset.
+
+
+AlphaFold is a complex neural network that predicts 3D protein structures from amino acid sequences. It has two main stages:
+
+1. Trunk stage- This stage processes the input data, including the amino acid sequence and aligned sequences of similar proteins (MSA). It uses repeated layers of a novel neural network block called Evoformer to produce two arrays: one representing the processed MSA and another representing residue pairs.
+
+2. Structure module- This stage introduces an explicit 3D structure, using rotation and translation for each residue. It refines the structure through iterative refinement, using a novel equivariant transformer and a loss term that emphasizes orientational correctness.
+
+Key innovations include:
+
+- Evoformer blocks for exchanging information within MSA and pair representations
+- Equivariant transformer for implicit reasoning about unrepresented side-chain atoms
+- Iterative refinement through "recycling" of outputs
+- Loss term emphasizing 
+
+The Evoformer is a building block of the AlphaFold network that predicts protein structures. It views the prediction problem as a graph inference problem in 3D space.
+
+1. MSA (Multiple Sequence Alignment) representation: Encodes information about individual residues and their sequences.
+2. Pair representation: Encodes relationships between residues, such as distances and angles.
+
+MSA updates pair representation through an element-wise outer product, enabling continuous communication between MSA and pair representations. 
+
+The structure module takes the pair representation and the original sequence row (single representation) from the trunk and predicts the 3D backbone structure of the protein.
+
+1. Residue Gas Representation is for the 3D backbone structure as Nres independent rotations and translations.
+2. Invariant Point Attention (IPA) updates neural activations without changing 3D positions, using geometry-aware attention.
+3. Equivariant Update Operation updates the residue gas representation using the updated activations.
+
+Loss Function compares predicted atom positions to true positions under multiple alignments, using a clamped L1 loss. This encourages atoms to be correct relative to the local frame of each residue.
+
+AlphaFold is initially trained on labelled data from the Protein Data Bank (PDB). The trained network predicts structures for 350,000 diverse sequences, creating a new dataset. The network is re-trained using both labelled PDB data and the new dataset.
