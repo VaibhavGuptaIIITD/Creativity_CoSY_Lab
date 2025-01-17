@@ -92,52 +92,49 @@ AlphaFold is initially trained on labelled data from the Protein Data Bank (PDB)
 1. Define the Problem as a Sequential Decision-Making Task
 
 For MuZero to work, the protein folding process must be framed as a series of actions leading to a final state (the folded structure). Here’s how we could conceptualize it:
-	•	States: Represent intermediate protein conformations during folding.
-	•	Actions: Define actions as transformations or adjustments to the 3D positions of amino acid residues (e.g., rotating bonds, moving residues).
-	•	Environment Dynamics: Model the physics-based changes that occur when an action is taken (e.g., the new conformation after an amino acid moves or rotates).
-	•	Reward Function: Design a reward that guides MuZero toward the correct folded structure. For example:
-	•	Use RMSD (Root Mean Square Deviation) to the target structure as a negative reward.
-	•	Include energy minimization as a reward, aligning with principles of protein folding (e.g., lower energy = more stable structure).
+- States: Represent intermediate protein conformations during folding.
+- Actions: Define actions as transformations or adjustments to the 3D positions of amino acid residues (e.g., rotating bonds, moving residues).
+- Environment Dynamics: Model the physics-based changes that occur when an action is taken (e.g., the new conformation after an amino acid moves or rotates).
+- Reward Function: Design a reward that guides MuZero toward the correct folded structure. For example:
+- Use RMSD (Root Mean Square Deviation) to the target structure as a negative reward.
+- Include energy minimization as a reward, aligning with principles of protein folding (e.g., lower energy = more stable structure).
 
 2. Modify the Dynamics Model
 
 MuZero’s dynamics model predicts future states based on actions. You would need to:
-	•	Train the dynamics model to simulate how structural adjustments (actions) change the protein’s conformation.
-	•	Use physical or empirical models (like force fields or machine-learned approximations) to guide how actions influence residue positions.
+- Train the dynamics model to simulate how structural adjustments (actions) change the protein’s conformation.
+- Use physical or empirical models (like force fields or machine-learned approximations) to guide how actions influence residue positions.
 
 3. Incorporate Biological Priors
 
 Unlike traditional applications of MuZero, protein folding requires domain-specific knowledge:
-	•	MSA Features: Integrate evolutionary information from multiple sequence alignments to inform the initial state or constrain the action space.
-	•	Geometric Constraints: Ensure that generated structures respect basic physical and chemical constraints (e.g., bond lengths, angles, and steric clashes).
-	•	Energy Functions: Include energy functions like Rosetta or molecular dynamics tools to evaluate the stability of generated structures.
+- MSA Features: Integrate evolutionary information from multiple sequence alignments to inform the initial state or constrain the action space.
+- Geometric Constraints: Ensure that generated structures respect basic physical and chemical constraints (e.g., bond lengths, angles, and steric clashes).
+- Energy Functions: Include energy functions like Rosetta or molecular dynamics tools to evaluate the stability of generated structures.
 
 4. Redesign the Monte Carlo Tree Search (MCTS)
 
 Protein folding presents an enormous search space, so MCTS needs to be adapted:
-	•	Efficient Sampling: Design heuristics to explore only biologically plausible conformations instead of random sampling.
-	•	Pruning: Discard unrealistic conformations early in the search process.
-	•	Parallelization: Leverage GPUs/TPUs to parallelize MCTS, as protein folding requires evaluating a vast number of potential structures.
+- Efficient Sampling: Design heuristics to explore only biologically plausible conformations instead of random sampling.
+- Pruning: Discard unrealistic conformations early in the search process.
+- Parallelization: Leverage GPUs/TPUs to parallelize MCTS, as protein folding requires evaluating a vast number of potential structures.
 
 5. Simplify the Action Space
 
 The action space must be manageable:
-	•	Represent actions as small movements (e.g., torsion angle adjustments or rigid-body transformations).
-	•	Use coarse-grained models for faster computation, refining only at the end with all-atom models.
+- Represent actions as small movements (e.g., torsion angle adjustments or rigid-body transformations).
+- Use coarse-grained models for faster computation, refining only at the end with all-atom models.
 
 6. Train the Model
 
 Training MuZero for protein folding would involve:
-	•	Data: Use known protein structures from databases like PDB (Protein Data Bank).
-	•	Training Loop: Simulate the folding process as MuZero “acts” to reach lower-energy conformations.
-	•	Loss Functions:
-	•	RMSD to the target structure.
-	•	Energy minimization scores.
-	•	Constraints to ensure realistic backbone and side-chain conformations.
+- Data: Use known protein structures from databases like PDB (Protein Data Bank).
+- Training Loop: Simulate the folding process as MuZero “acts” to reach lower-energy conformations.
+- Loss Functions: RMSD to the target structure, Energy minimization scores, Constraints to ensure realistic backbone and side-chain conformations.
 
 7. Evaluate and Iterate
 
 Evaluate how well the adapted MuZero folds proteins:-
-	•	Test it on known structures and compare predictions to experimental results.
-	•	Analyze how efficiently it explores the folding landscape (does it find correct structures quickly?).
-	•	Refine the reward function, action space, and model architecture as needed.
+- Test it on known structures and compare predictions to experimental results.
+- Analyze how efficiently it explores the folding landscape (does it find correct structures quickly?).
+- Refine the reward function, action space, and model architecture as needed.
