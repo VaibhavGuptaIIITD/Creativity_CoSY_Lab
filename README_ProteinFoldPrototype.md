@@ -44,14 +44,14 @@ Proteins have specific residue–residue contacts that are evolutionarily conser
 ### Mathematical Formula
 
 $$
-R_{cl}(s) = -\sum_{i<j} \mathbb{1}\{d_{ij}(s) < d_{\min}\}
+R_{cl}(s) = -\sum_{i<j} \mathbf{1}\{ d_{ij}(s) < d_{\min} \}
 $$
 
-where \(d_{\min}\) is the minimum allowable distance between nonbonded atoms.
+where \(d_{ij}(s)\) is the Euclidean distance between residues \(i\) and \(j\) in the current state \(s\), and \(d_{\min}\) is the minimum allowable distance between nonbonded atoms. The symbol \(\mathbf{1}\{ \cdot \}\) denotes the indicator function, which equals 1 if the condition inside is true, and 0 otherwise.
 
 ### Intuition and Rationale
 
-Steric clashes occur when atoms come too close, violating physical constraints. This term penalizes such unrealistic overlaps. It enforces spatial exclusion by subtracting a penalty for every atom pair that violates the minimum distance \(d_{\min}\). This binary signal is crucial for teaching the agent to respect basic molecular geometry.
+Steric clashes occur when atoms are too close together, violating physical constraints and indicating an unrealistic conformation. This term penalizes any such occurrences by subtracting a fixed amount for every atom pair that violates the minimum distance \(d_{\min}\). By using a binary indicator function, the penalty is applied directly, providing clear and immediate feedback that encourages the RL agent to learn to avoid physically impossible configurations.
 
 ---
 
@@ -131,17 +131,18 @@ Hydrophobic residues tend to be buried in the protein core. This term penalizes 
 ### Mathematical Formula
 
 $$
-R_e(s) = -\sum_{i<j} \frac{q_i\,q_j}{\|x_i - x_j\| + \epsilon}
+R_e(s) = -\sum_{i<j} \frac{q_i\,q_j}{\lVert x_i - x_j \rVert + \epsilon}
 $$
 
 where:
 - \(q_i\) is the charge of residue \(i\),
-- \(\|x_i - x_j\|\) is the Euclidean distance between residues \(i\) and \(j\),
-- \(\epsilon\) is a small constant to avoid division by zero.
+- \(\lVert x_i - x_j \rVert\) denotes the Euclidean norm (distance) between residues \(i\) and \(j\),
+- \(\epsilon\) is a small constant added to avoid division by zero.
 
 ### Intuition and Rationale
 
-Electrostatic interactions play a key role in protein stability. This term calculates a Coulomb-like interaction between residues. Like charges (positive product) lead to a penalty, while opposite charges contribute favorably. Dividing by the distance emphasizes short-range interactions. This ensures the RL agent considers long-range electrostatic effects when optimizing the fold.
+Electrostatic interactions play a crucial role in protein stability. In this term, pairs of residues interact according to a Coulomb-like formula. Residues with like charges (where \(q_i\,q_j > 0\)) will contribute a positive term in the sum (which, after applying the negative sign, penalizes the configuration), while oppositely charged residues yield a negative product, thus providing a favorable contribution. Dividing by the inter-residue distance emphasizes that close interactions have a stronger effect. The inclusion of \(\epsilon\) ensures numerical stability. Overall, this term guides the RL agent to consider electrostatic forces when optimizing the protein conformation.
+
 
 ---
 
