@@ -1,6 +1,6 @@
 # RL Based Protein Folding Prototype 
 
-## Option 1: Hydrophobic-Polar (HP) Lattice Model (Simplified)  
+## Simplified Option: Hydrophobic-Polar (HP) Lattice Model  
 For **initial proof-of-concept testing** with reinforcement learning (RL), the HP model offers unparalleled simplicity:  
 
 ### Why HP Models?  
@@ -25,7 +25,7 @@ For **initial proof-of-concept testing** with reinforcement learning (RL), the H
 
 ---
 
-## Option 2: Real Protein Families (Biologically Relevant)  
+## Biologically Relevant Option: Real Protein Families 
 For **real protein sequences** with minimal complexity, consider these experimentally validated families:  
 
 ### Recommended Families  
