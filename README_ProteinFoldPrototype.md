@@ -1,7 +1,7 @@
 # Composite Reward Function for RL-Based Protein Folding
 
 **Author:** Your Name  
-**Date:** \today
+**Date:** [Insert Date]
 
 This document describes a composite reward function for a reinforcement learning (RL) agent applied to protein folding. The overall reward is given as a weighted sum of several components, each reflecting a biophysical or evolutionary criterion that guides the system toward a native-like folded structure. In general, we write the total reward as:
 
@@ -10,7 +10,7 @@ R(s,a) = \sum_{k \in \{c,\, cl,\, b,\, r,\, hb,\, hp,\, e,\, t,\, p,\, d,\, rec,
 $$
 
 where:
-- **\(s\)** is the current state (e.g., the positions, bond lengths, torsion angles, etc.),
+- **\(s\)** is the current state (e.g., positions, bond lengths, torsion angles, etc.),
 - **\(a\)** is the action taken,
 - **\(w_k\)** are positive hyperparameters (weights),
 - **\(R_k(s,a)\)** are the individual reward (or penalty) components.
@@ -24,18 +24,18 @@ Below, each reward component is described in detail.
 ### Mathematical Formula
 
 $$
-R_c(s) = \sum_{i,j} \mathbb{1}\{d_{ij}(s) \le \tau\} \cdot \mathbb{1}\{d_{ij}^{AF} \le \tau\}
+R_c(s) = \sum_{i,j} \mathbf{1}\{ d_{ij}(s) \le \tau \} \cdot \mathbf{1}\{ d_{ij}^{AF} \le \tau \}
 $$
 
 where:
 - \(d_{ij}(s)\) is the Euclidean distance between residues \(i\) and \(j\) in the current state \(s\),
-- \(d_{ij}^{AF}\) is the corresponding predicted contact (or binary indicator) from AlphaFold,
+- \(d_{ij}^{AF}\) is the predicted contact (or binary indicator) from AlphaFold,
 - \(\tau\) is a distance threshold (typically around 8\,\AA),
-- \(\mathbb{1}\{\cdot\}\) is the indicator function.
+- \(\mathbf{1}\{\cdot\}\) is the indicator function (equal to 1 if the condition holds, 0 otherwise).
 
 ### Intuition and Rationale
 
-Proteins have specific residue–residue contacts that are evolutionarily conserved. Evolutionary data (from MSAs) suggest which residues are likely to be close together. This term rewards the agent when the conformation \(s\) exhibits contacts that match those predicted by AlphaFold. By enforcing that only pairs within the threshold \(\tau\) contribute, the term focuses on critical long-range interactions. Essentially, if the conformation respects these evolutionary “blueprints,” it is likely to be closer to the native fold.
+This term rewards the RL agent for producing conformations in which residue pairs predicted to be in contact actually are close in space. Evolutionary data from multiple sequence alignments suggest which residues are likely to interact. By matching the agent’s contacts to these predictions, the agent is guided toward a fold that respects the evolutionary “blueprint.”
 
 ---
 
@@ -47,11 +47,14 @@ $$
 R_{cl}(s) = -\sum_{i<j} \mathbf{1}\{ d_{ij}(s) < d_{\min} \}
 $$
 
-where \(d_{ij}(s)\) is the Euclidean distance between residues \(i\) and \(j\) in the current state \(s\), and \(d_{\min}\) is the minimum allowable distance between nonbonded atoms. The symbol \(\mathbf{1}\{ \cdot \}\) denotes the indicator function, which equals 1 if the condition inside is true, and 0 otherwise.
+where:
+- \(d_{ij}(s)\) is the Euclidean distance between residues \(i\) and \(j\),
+- \(d_{\min}\) is the minimum allowable distance between nonbonded atoms,
+- \(\mathbf{1}\{\cdot\}\) is the indicator function.
 
 ### Intuition and Rationale
 
-Steric clashes occur when atoms are too close together, violating physical constraints and indicating an unrealistic conformation. This term penalizes any such occurrences by subtracting a fixed amount for every atom pair that violates the minimum distance \(d_{\min}\). By using a binary indicator function, the penalty is applied directly, providing clear and immediate feedback that encourages the RL agent to learn to avoid physically impossible configurations.
+Steric clashes occur when atoms are too close, resulting in unrealistic, physically strained conformations. This term imposes a fixed penalty for every pair of atoms violating the minimum distance \(d_{\min}\). Such a binary penalty enforces spatial exclusion and ensures that the RL agent learns to generate physically plausible structures.
 
 ---
 
@@ -60,7 +63,7 @@ Steric clashes occur when atoms are too close together, violating physical const
 ### Mathematical Formula
 
 $$
-R_b(s) = -\frac{1}{N-1}\sum_{i=1}^{N-1} \Bigl( \|x_{i+1} - x_i\| - L_{\mathrm{ideal}} \Bigr)^2
+R_b(s) = -\frac{1}{N-1} \sum_{i=1}^{N-1} \Bigl( \|x_{i+1} - x_i\| - L_{\mathrm{ideal}} \Bigr)^2
 $$
 
 where:
@@ -70,7 +73,7 @@ where:
 
 ### Intuition and Rationale
 
-This term ensures that the bond lengths between consecutive residues remain near the ideal value. Deviations from \(L_{\mathrm{ideal}}\) are penalized quadratically, meaning larger errors incur disproportionately higher penalties. This helps maintain local geometric consistency and prevents the accumulation of errors that could distort the entire structure.
+Maintaining ideal bond lengths is essential for accurate protein geometry. This term penalizes deviations from the ideal bond length quadratically, ensuring that even small deviations are corrected and larger errors are heavily penalized. It helps the agent maintain a correct backbone structure, which is crucial for building higher-order structures.
 
 ---
 
@@ -86,7 +89,7 @@ where \(P_{\mathrm{rama}}(\phi_i, \psi_i)\) is the empirical probability (from t
 
 ### Intuition and Rationale
 
-The backbone dihedral angles \(\phi\) and \(\psi\) determine local protein conformation. The Ramachandran plot shows regions where these angles are statistically favorable. By summing the logarithm of these probabilities, the RL agent is rewarded for adopting favorable angles. This guides the agent toward realistic local conformations even if the overall fold is correct.
+Backbone dihedral angles determine the local conformation of proteins. The Ramachandran plot indicates regions of favorable angles. By summing the log-probabilities, the agent is rewarded for adopting torsion angles common in native proteins. This term helps ensure that local geometries are realistic.
 
 ---
 
@@ -95,7 +98,7 @@ The backbone dihedral angles \(\phi\) and \(\psi\) determine local protein confo
 ### Mathematical Formula
 
 $$
-R_{hb}(s) = \sum_{(i,j)\in \mathcal{HB}} h_{ij}(s)
+R_{hb}(s) = \sum_{(i,j) \in \mathcal{HB}} h_{ij}(s)
 $$
 
 where:
@@ -104,7 +107,7 @@ where:
 
 ### Intuition and Rationale
 
-Hydrogen bonds stabilize secondary structures like \(\alpha\)-helices and \(\beta\)-sheets. Rewarding the formation of these bonds encourages the agent to build locally stable, realistic structures. Depending on implementation, \(h_{ij}(s)\) may be a binary value or a continuous measure of bond strength.
+Hydrogen bonds stabilize secondary structures like \(\alpha\)-helices and \(\beta\)-sheets. Rewarding their formation encourages the agent to create locally stable, biologically realistic structures. This term directs the agent toward conformations where these critical interactions are present.
 
 ---
 
@@ -113,7 +116,7 @@ Hydrogen bonds stabilize secondary structures like \(\alpha\)-helices and \(\bet
 ### Mathematical Formula
 
 $$
-R_{hp}(s) = -\frac{1}{|\mathcal{H}|}\sum_{i\in \mathcal{H}} \mathrm{SASA}(x_i)
+R_{hp}(s) = -\frac{1}{|\mathcal{H}|} \sum_{i \in \mathcal{H}} \mathrm{SASA}(x_i)
 $$
 
 where:
@@ -122,7 +125,7 @@ where:
 
 ### Intuition and Rationale
 
-Hydrophobic residues tend to be buried in the protein core. This term penalizes high solvent-accessible surface area (SASA) for these residues, thereby rewarding conformations where they are properly buried. A well-packed hydrophobic core is essential for structural stability.
+Hydrophobic residues are typically buried in the protein core. This term penalizes high solvent-accessible surface area for hydrophobic residues, thereby rewarding conformations where these residues are well-packed. A well-formed hydrophobic core is crucial for the overall stability of the protein.
 
 ---
 
@@ -136,12 +139,12 @@ $$
 
 where:
 - \(q_i\) is the charge of residue \(i\),
-- \(\left\| x_i - x_j \right\|\) denotes the Euclidean distance between residues \(i\) and \(j\),
+- \(\left\| x_i - x_j \right\|\) is the Euclidean distance between residues \(i\) and \(j\),
 - \(\epsilon\) is a small constant to avoid division by zero.
 
 ### Intuition and Rationale
 
-Electrostatic interactions play a crucial role in protein stability. This term computes a Coulomb-like interaction between residue pairs. Like charges (where \(q_i\,q_j > 0\)) will yield a positive contribution (which, after negation, is a penalty), while opposite charges yield a negative product, thus favoring the configuration. Dividing by the inter-residue distance emphasizes that closer interactions have a stronger effect. The constant \(\epsilon\) ensures numerical stability. Overall, this term guides the RL agent to account for electrostatic forces when optimizing the protein conformation.
+Electrostatic interactions are key to protein stability. This term calculates a Coulomb-like interaction between residue pairs. Residues with like charges produce a penalty, while those with opposite charges provide a favorable contribution. The division by the distance emphasizes that interactions are stronger at close range. This term guides the agent to consider the effects of charge interactions when optimizing the structure.
 
 ---
 
@@ -155,11 +158,11 @@ $$
 R_t(s) = \frac{1}{\mathrm{RMSD}(s, s^{\mathrm{template}}) + \epsilon}
 $$
 
-Alternatively, one might use a TM-score that scales between 0 and 1.
+Alternatively, a TM-score (ranging from 0 to 1) could be used.
 
 ### Intuition and Rationale
 
-When a structural template is available, this term rewards the agent for producing a conformation similar to the known template. The inverse RMSD formulation means that smaller deviations yield higher rewards. This guides the agent towards biologically plausible structures by leveraging homologous information.
+When a structural template is available, this term rewards the agent for producing a conformation similar to the template. A lower RMSD (or higher TM-score) means that the predicted structure is close to a known homologous structure. This leverages known structural information to guide the folding process toward biologically plausible conformations.
 
 ---
 
@@ -179,7 +182,7 @@ where:
 
 ### Intuition and Rationale
 
-The pLDDT score reflects the model’s confidence in the predicted position of each residue. By weighting the positional error by these scores and taking the inverse, the term rewards conformations that are closer to the true structure, especially in high-confidence regions. This term is useful when high-quality experimental data or predictions are available for comparison.
+The pLDDT score indicates the confidence in the predicted positions of residues. By weighting the positional error with pLDDT and taking the inverse, this term rewards conformations that are closer to the true structure, especially in high-confidence regions. It helps ensure that the agent focuses on achieving high accuracy where it matters most.
 
 ---
 
@@ -191,11 +194,11 @@ $$
 R_d(s) = -D_{KL}\Bigl(P_{\mathrm{agent}}(\cdot\,|\,s) \,\Big\|\, P_{AF}(\cdot)\Bigr)
 $$
 
-where \(D_{KL}\) denotes the Kullback–Leibler divergence between the agent’s observed inter-residue distance distribution \(P_{\mathrm{agent}}(\cdot\,|\,s)\) and AlphaFold's predicted distogram \(P_{AF}(\cdot)\).
+where \(D_{KL}\) denotes the Kullback--Leibler divergence between the agent’s observed inter-residue distance distribution \(P_{\mathrm{agent}}(\cdot\,|\,s)\) and AlphaFold's predicted distogram \(P_{AF}(\cdot)\).
 
 ### Intuition and Rationale
 
-AlphaFold provides a predicted distribution over inter-residue distances (a distogram). This term penalizes deviations between the distribution derived from the current conformation and the predicted one. A smaller KL divergence (i.e., a closer match) results in a higher reward. This probabilistic term helps integrate statistical trends from large-scale sequence data into the RL optimization.
+AlphaFold predicts a distogram, a probability distribution over inter-residue distances, which encapsulates both evolutionary and structural information. This term penalizes the divergence between the distribution obtained from the current conformation and the predicted distogram. A lower divergence indicates better agreement, thus higher reward. This term helps align the RL agent’s predictions with statistical trends from large-scale sequence data.
 
 ---
 
@@ -211,7 +214,7 @@ where \(x_i^{(t)}\) and \(x_i^{(t-1)}\) are the positions of residue \(i\) at th
 
 ### Intuition and Rationale
 
-Many protein folding pipelines use iterative refinement (recycling) to improve the structure. A well-converged structure will show small changes between iterations. This term penalizes large differences between successive iterations, encouraging the agent to refine the fold until it reaches a stable configuration. It effectively serves as a convergence indicator.
+Iterative refinement (or recycling) is used to progressively improve the conformation. This term penalizes large changes between successive iterations, encouraging the structure to converge to a stable state. When changes are minimal, it indicates that the structure is close to converging, which is desirable for a high-quality prediction.
 
 ---
 
@@ -229,7 +232,7 @@ where:
 
 ### Intuition and Rationale
 
-In complex environments like protein folding, extrinsic rewards may be sparse. Intrinsic rewards provide motivation for exploration by rewarding novelty. Here, the RL agent is incentivized to explore states where the forward model's prediction error is high. This encourages exploration of less familiar regions in the conformational space, potentially leading to the discovery of better folding pathways.
+Intrinsic rewards encourage exploration, especially when extrinsic rewards are sparse. Here, the RL agent is motivated to explore states where the forward model's prediction error is high. A large error suggests that the state is novel or not well understood, thereby incentivizing the agent to explore such regions in the conformational space. This is critical for avoiding premature convergence on suboptimal folds.
 
 ---
 
