@@ -78,6 +78,8 @@ Below, each reward component is described in detail.
 
 ## 1. Contact Map Agreement \(R_c(s)\)
 
+Rewards agreement with AlphaFold-predicted contacts [^8][^11]:
+
 ### Mathematical Formula
 
 $$
@@ -98,6 +100,8 @@ Residue--residue contacts are often inferred from evolutionary data (MSAs). This
 
 ## 2. Steric Clash Penalty \(R_{cl}(s)\)
 
+Penalizes atom overlaps, inspired by force fields like AMBER/CHARMM [^13]:
+
 ### Mathematical Formula
 
 $$
@@ -116,6 +120,8 @@ Steric clashes occur when atoms come too close, leading to physically impossible
 ---
 
 ## 3. Bond Geometry Reward \(R_b(s)\)
+
+Enforces ideal bond lengths (3.8 Å) [^14]: 
 
 ### Mathematical Formula
 
@@ -136,6 +142,8 @@ Local geometry must be correct for a realistic fold. This term penalizes deviati
 
 ## 4. Ramachandran (Torsion Angle) Reward \(R_r(s)\)
 
+Uses Ramachandran distributions from MolProbity [^15]: 
+
 ### Mathematical Formula
 
 $$
@@ -151,6 +159,8 @@ Protein backbone angles are constrained by sterics and energetics. The Ramachand
 ---
 
 ## 5. Hydrogen Bond Reward \(R_{hb}(s)\)
+
+Rewards H-bond formation (β-sheets/α-helices) [^16]:  
 
 ### Mathematical Formula
 
@@ -170,6 +180,8 @@ Hydrogen bonds stabilize secondary structures (e.g., helices, sheets). Rewarding
 
 ## 6. Hydrophobic Packing Reward \(R_{hp}(s)\)
 
+Minimizes SASA of hydrophobic residues [^1][^2]:  
+
 ### Mathematical Formula
 
 $$
@@ -187,6 +199,8 @@ Hydrophobic residues typically cluster inside the protein core. This term penali
 ---
 
 ## 7. Electrostatic Energy Penalty \(R_e(s)\)
+
+Coulombic interactions from MD force fields [^13]: 
 
 ### Mathematical Formula
 
@@ -207,6 +221,8 @@ Electrostatic interactions can stabilize or destabilize a fold. Like charges (po
 
 ## 8. Template Similarity Reward \(R_t(s)\)
 
+Uses TM-score for template alignment [^17]:  
+
 ### Mathematical Formula
 
 A common choice is inverse RMSD:
@@ -224,6 +240,8 @@ If a known template structure is available, this term rewards similarity to that
 ---
 
 ## 9. pLDDT-Weighted Conformational Accuracy Reward \(R_p(s)\)
+
+Leverages AlphaFold’s confidence scores [^11]: 
 
 ### Mathematical Formula
 
@@ -244,6 +262,8 @@ AlphaFold’s pLDDT score reflects how confident it is in each residue’s posit
 
 ## 10. Distogram Consistency Reward \(R_d(s)\)
 
+Matches AlphaFold’s distogram predictions [^11]:  
+
 ### Mathematical Formula
 
 $$
@@ -260,6 +280,8 @@ AlphaFold predicts a probability distribution over inter-residue distances (the 
 
 ## 11. Recycling Consistency Reward \(R_{rec}(s)\)
 
+Stabilizes iterative refinement (AlphaFold recycling) [^11]:  
+
 ### Mathematical Formula
 
 $$
@@ -275,6 +297,8 @@ AlphaFold uses iterative refinement (“recycling”). A stable structure will c
 ---
 
 ## 12. Intrinsic (Curiosity) Reward \(R_{int}(s,a)\)
+
+Encourages exploration via prediction error [^18]:  
 
 ### Mathematical Formula
 
@@ -305,3 +329,14 @@ R(s,a) \;=\;& w_c\,R_c(s) \;+\; w_{cl}\,R_{cl}(s) \;+\; w_b\,R_b(s) \;+\; w_r\,R
 $$
 
 Each \(w_k\) can be tuned to balance its contribution. Together, these terms guide the RL agent to produce protein conformations that are physically realistic, evolutionarily consistent, and optimized under known biophysical principles.
+
+
+[^13]: Cornell, W. D. et al. (1995). *JACS*, 117(19), 5179–5197. [DOI](https://doi.org/10.1021/ja00124a002) (AMBER)  
+[^14]: Engh, R. A. & Huber, R. (1991). *Acta Cryst.*, A47(4), 392–400. [DOI](https://doi.org/10.1107/S0108767391001071)  
+[^15]: Chen, V. B. et al. (2010). *Acta Cryst.*, D66(1), 12–21. [DOI](https://doi.org/10.1107/S0907444909042073) (MolProbity)  
+[^16]: Baker, E. N. & Hubbard, R. E. (1984). *Prog. Biophys. Mol. Biol.*, 44(2), 97–179. [DOI](https://doi.org/10.1016/0079-6107(84)90007-3)  
+[^17]: Zhang, Y. & Skolnick, J. (2004). *Proteins*, 57(4), 702–710. [DOI](https://doi.org/10.1002/prot.20264) (TM-score)  
+[^18]: Pathak, D. et al. (2017). *ICML*. [arXiv](https://arxiv.org/abs/1705.05363) (Curiosity-driven RL)  
+
+---
+
