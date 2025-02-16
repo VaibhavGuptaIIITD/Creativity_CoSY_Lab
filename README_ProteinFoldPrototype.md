@@ -44,7 +44,7 @@ This term rewards the RL agent for producing conformations in which residue pair
 ### Mathematical Formula
 
 $$
-R_{cl}(s) = -\sum_{i<j} \mathbf{1}\{ d_{ij}(s) < d_{\min} \}
+R_{cl}(s) = -\sum_{i<j} \mathbf{1}\{ d_{ij}(s) < d_{\min} \
 $$
 
 where:
