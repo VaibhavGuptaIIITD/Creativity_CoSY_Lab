@@ -16,7 +16,6 @@ For **initial proof-of-concept testing** with reinforcement learning (RL), the H
 - **Benchmarked in RL Studies**  
   Used in frameworks like [Gym-Lattice](https://github.com/yourlink/gym-lattice) and [FoldingZero](https://github.com/yourlink/foldingzero) [^5][^6].  
 
-**References**  
 [^1]: Dill, K. A. (1985). "Theory for the folding and stability of globular proteins." *Biochemistry*.  
 [^2]: Lau, K. F. & Dill, K. A. (1989). "A lattice statistical mechanics model of the conformational and sequence spaces of proteins." *Macromolecules*.  
 [^3]: Levinthal, C. (1969). "How to fold graciously." *Mossbauer Spectroscopy in Biological Systems*.  
@@ -49,8 +48,7 @@ For **real protein sequences** with minimal complexity, consider these experimen
 - **Small Size**: Reduces computational load (e.g., Chignolin has only 10 residues).  
 - **Rich Data**: Experimentally solved structures enable reward function design and validation.  
 - **RL Compatibility**: Used in AlphaFold/Rosetta training pipelines [^11][^12].  
-
-**References**  
+ 
 [^7]: Kubelka, J. et al. (2004). "The folding kinetics of the villin headpiece." *Journal of Molecular Biology*.  
 [^8]: AlphaFold Dataset (2021). [DOI](https://doi.org/10.1038/s41586-021-03819-2).  
 [^9]: Honda, S. et al. (2008). "Ultra-fast folding of a β-hairpin in aqueous solution." *Journal of the American Chemical Society*.  
