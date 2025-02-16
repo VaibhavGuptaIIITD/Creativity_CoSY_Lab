@@ -131,18 +131,17 @@ Hydrophobic residues tend to be buried in the protein core. This term penalizes 
 ### Mathematical Formula
 
 $$
-R_e(s) = -\sum_{i<j} \frac{q_i\,q_j}{\lVert x_i - x_j \rVert + \epsilon}
+R_e(s) = -\sum_{i<j} \frac{q_i\,q_j}{\left\| x_i - x_j \right\| + \epsilon}
 $$
 
 where:
 - \(q_i\) is the charge of residue \(i\),
-- \(\lVert x_i - x_j \rVert\) denotes the Euclidean norm (distance) between residues \(i\) and \(j\),
-- \(\epsilon\) is a small constant added to avoid division by zero.
+- \(\left\| x_i - x_j \right\|\) denotes the Euclidean distance between residues \(i\) and \(j\),
+- \(\epsilon\) is a small constant to avoid division by zero.
 
 ### Intuition and Rationale
 
-Electrostatic interactions play a crucial role in protein stability. In this term, pairs of residues interact according to a Coulomb-like formula. Residues with like charges (where \(q_i\,q_j > 0\)) will contribute a positive term in the sum (which, after applying the negative sign, penalizes the configuration), while oppositely charged residues yield a negative product, thus providing a favorable contribution. Dividing by the inter-residue distance emphasizes that close interactions have a stronger effect. The inclusion of \(\epsilon\) ensures numerical stability. Overall, this term guides the RL agent to consider electrostatic forces when optimizing the protein conformation.
-
+Electrostatic interactions play a crucial role in protein stability. This term computes a Coulomb-like interaction between residue pairs. Like charges (where \(q_i\,q_j > 0\)) will yield a positive contribution (which, after negation, is a penalty), while opposite charges yield a negative product, thus favoring the configuration. Dividing by the inter-residue distance emphasizes that closer interactions have a stronger effect. The constant \(\epsilon\) ensures numerical stability. Overall, this term guides the RL agent to account for electrostatic forces when optimizing the protein conformation.
 
 ---
 
