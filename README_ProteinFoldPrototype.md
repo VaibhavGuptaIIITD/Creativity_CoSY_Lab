@@ -330,6 +330,34 @@ $$
 
 Each \(w_k\) can be tuned to balance its contribution. Together, these terms guide the RL agent to produce protein conformations that are physically realistic, evolutionarily consistent, and optimized under known biophysical principles.
 
+---
+
+## Changes Made in the HP model with Deep RL
+
+Electrostatic Potential Function
+
+The function compute_electrostatic_potential calculates the electrostatic energy between pairs of residues in a conformation using a simplified version of Coulomb’s law. In the context of a simplified hydrophobic–polar (HP) model, only polar (P) residues are given a nonzero charge, while hydrophobic (H) residues are treated as neutral.
+
+The function assigns a fixed charge to each residue based on its type:
+
+Hydrophobic (H): charge = 0
+
+Polar (P): charge = –1
+
+Pairwise Interaction:
+
+The code then uses a double loop to examine every unique pair of residues. For each pair (i,j):
+
+It calculates the Euclidean distance between their positions.
+
+It computes the contribution of their interaction using the formula:
+
+e = (ke * qi * qj) / r
+
+Here, qi and qj are the charge of residues, r is the Euclidean distance (computed via the euclidean_distance helper function), and ke is a proportionality constant that can be tuned.
+
+
+---
 
 [^13]: Cornell, W. D. et al. (1995). *JACS*, 117(19), 5179–5197. [DOI](https://doi.org/10.1021/ja00124a002) (AMBER)  
 [^14]: Engh, R. A. & Huber, R. (1991). *Acta Cryst.*, A47(4), 392–400. [DOI](https://doi.org/10.1107/S0108767391001071)  
