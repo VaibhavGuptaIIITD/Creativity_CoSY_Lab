@@ -334,7 +334,7 @@ Each \(w_k\) can be tuned to balance its contribution. Together, these terms gui
 
 ## Changes Made in the HP model with Deep RL
 
-**Electrostatic Potential Function**
+**1. Electrostatic Potential Function**
 
 The function compute_electrostatic_potential calculates the electrostatic energy between pairs of residues in a conformation using a simplified version of Coulomb’s law. In the context of a simplified hydrophobic–polar (HP) model, only polar (P) residues are given a nonzero charge, while hydrophobic (H) residues are treated as neutral.
 
@@ -357,7 +357,7 @@ e = (ke * qi * qj) / r
 Here, qi and qj are the charge of residues, r is the Euclidean distance (computed via the euclidean_distance helper function), and ke is a proportionality constant that can be tuned.
 
 
-**Van der Waals (VdW) Potential Function**
+**2. Van der Waals (VdW) Potential Function**
 
 The compute_vdw_potential function computes the Lennard–Jones potential, which is commonly used to model van der Waals interactions. This potential captures both the attractive forces at moderate distances and the strong repulsion when atoms get too close.
 
