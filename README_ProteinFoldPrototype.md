@@ -376,6 +376,29 @@ Skipping Backbone Neighbors: In a polymer chain (like a protein), sequential res
 
 The Reward Function is modified accordingly.
 
+**Training Model**
+
+
+So the training has info logged as (example case) :
+
+Sequence (seq): For example, PPHHPPHPPHHPPPHHPP
+
+Seed: The random seed (e.g., 42)
+
+Algorithm identifier (algo): In this run it shows as RAND 
+
+Number of episodes: e.g., 10000
+
+Use early stop flag: 0 means early stopping is not used
+
+![training](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/moving_avg-500.png?raw=true)
+
+The above image provides a visual summary of the learning progress by smoothing the episode rewards over a window of 500 episodes, helping track whether the agent’s performance is improving steadily over time. 
+
+X-Axis (Episode Index): The x-axis represents the training episodes, usually scaled in thousands (K) if using a large number of episodes.
+
+Y-Axis (Moving Average of Rewards): The y-axis shows the average reward computed over the past 500 episodes. Since the rewards are negative (energy minimization), a more negative moving average indicates that the agent has found lower-energy (better) conformations.
+
 ---
 
 [^13]: Cornell, W. D. et al. (1995). *JACS*, 117(19), 5179–5197. [DOI](https://doi.org/10.1021/ja00124a002) (AMBER)  
