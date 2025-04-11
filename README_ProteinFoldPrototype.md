@@ -363,7 +363,7 @@ The compute_vdw_potential function computes the Lennard–Jones potential, which
 
 Lennard–Jones Formula:
 
-e = 4 * eps [ (sig/r)^12 - (sig/r)^6 ]
+e = 4 * ϵ [ (σ/r)^12 - (σ/r)^6 ]
 
 ϵ: Depth of the potential well. This parameter sets the energy scale.
 
@@ -373,6 +373,8 @@ r: Euclidean distance between nonbonded residues.
 
 Skipping Backbone Neighbors: In a polymer chain (like a protein), sequential residues are connected by bonds. The function skips immediate neighbors (and optionally near-neighbors) because their relative positions are dictated by the chain connectivity, and their interactions do not need to be recalculated as part of nonbonded interactions.
 
+
+The Reward Function is modified accordingly.
 
 ---
 
