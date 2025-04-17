@@ -77,18 +77,18 @@ The lattice is represented as a 2D grid \(S \in \{-1, 0, +1\}^{(2n+1) \times (2n
 r_t = \text{state\_reward} + \text{collision\_penalty} + \text{trap\_penalty}
 \]
 
-- **state_reward*: Calculated at the end of the episode as the total number of non-consecutive adjacent H-H pais.
-- **collision_penalty*: Applied when the agent attempts to place an amino acid on an already occupied space (default: \(-2\).
-- **trap_penalty*: Applied if the agent traps itself, preventing the completion of the sequene.
+- **state_reward*: Calculated at the end of the episode as the total number of non-consecutive adjacent H-H pais.
+- **collision_penalty*: Applied when the agent attempts to place an amino acid on an already occupied space (default: \(-2\).
+- **trap_penalty*: Applied if the agent traps itself, preventing the completion of the sequene.
 
 
 **Workflow Overview**
 
-1. **Initialization*: The environment is initialized with a given HP sequece.
-2. **Agent Decision*: At each step, the agent selects an action based on the current stte.
-3. **Environment Update*: The environment updates the lattice configuration based on the acton.
-4. **Reward Calculation*: The environment computes the reward and checks for termination conditins.
-5. **Iteration*: Steps 2–4 are repeated until the sequence is fully placed or the agent is traped.
+1. **Initialization*: The environment is initialized with a given HP sequece.
+2. **Agent Decision*: At each step, the agent selects an action based on the current stte.
+3. **Environment Update*: The environment updates the lattice configuration based on the acton.
+4. **Reward Calculation*: The environment computes the reward and checks for termination conditins.
+5. **Iteration*: Steps 2–4 are repeated until the sequence is fully placed or the agent is traped.
 
 
 The Gym-Lattice environment provides a simplified yet insightful platform for exploring protein folding through reinforcement learig. By abstracting the complex nature of proteins into a 2D lattice model, it allows researchers and enthusiasts to experiment with RL algorithms in a controlled seting.
