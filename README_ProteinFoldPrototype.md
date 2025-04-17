@@ -46,13 +46,17 @@ In this framework, protein folding is modeled as a sequential decision-making pr
 
 The energy function $E(\mathcal{C})$ for a given conformation $\mathcal{C}$ is defined as:
 
+$$
 E(C) = Σ I(i, j)
+$$
 
 where the interaction function $I(i,j)$ i:
 
+$$
 I(i, j) = 
   -1, if pᵢ = pⱼ = H and |xᵢ - xⱼ| + |yᵢ - yⱼ| = 1  
    0, otherwise
+$$
 
 Here:
 $p_i$, $p_j$ denote the types (H or P) of the ith and jth amino acids.
@@ -80,7 +84,9 @@ The agent can choose from four discrete actios:
 
 At each timestep $t$, the reward $r_t$ is calculated as:
 
+$$
 r_t = state_reward + collision_penalty + trap_penalty
+$$
 
 - **state_reward*: Calculated at the end of the episode as the total number of non-consecutive adjacent H-H pais.
 - **collision_penalty*: Applied when the agent attempts to place an amino acid on an already occupied space (default: -2).
