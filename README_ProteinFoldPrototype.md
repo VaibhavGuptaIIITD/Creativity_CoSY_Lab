@@ -13,7 +13,7 @@ For **initial proof-of-concept testing** with reinforcement learning (RL), the H
 
 3. **Tractable Conformational Space**: Constrained to 2D/3D lattices, short sequences (e.g., `HPPHHP`) have limited valid folds, avoiding Levinthal’s paradox [^3]. ​Levinthal's Paradox highlights the discrepancy between the astronomical number of possible protein conformations and the rapid folding observed in nature. If a protein sampled all conformations randomly, folding would take longer than the universe's age. Yet, proteins fold within milliseconds to seconds. This suggests that folding is guided by specific pathways and energy landscapes, not random sampling. 
 
-4. **Energy Minimization**: The stability of a folded conformation is assessed by its energy, calculated based on the number of favorable H-H contacts. The native state of the protein corresponds to the conformation with the lowest possible energy, representing the most stable structure.Reward = Number of non-consecutive H-H contacts. Easy to compute and ideal for sparse reward RL [^4].
+4. **Energy Minimization**: The stability of a folded conformation is assessed by its energy, calculated based on the number of favorable H-H contacts. The native state of the protein corresponds to the conformation with the lowest possible energy, representing the most stable structure. Reward = Number of non-consecutive H-H contacts. Easy to compute and ideal for sparse reward RL [^4].
 
 5. **Benchmarked in RL Studies**: Used in frameworks like [Gym-Lattice](https://ljvmiranda921.github.io/projects/2018/05/13/gym-lattice/) and [FoldingZero](https://arxiv.org/abs/1812.00967) [^5][^6].
 
