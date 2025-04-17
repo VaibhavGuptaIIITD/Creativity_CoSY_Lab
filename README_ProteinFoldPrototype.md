@@ -48,26 +48,33 @@ The energy function $E(\mathcal{C})$ for a given conformation $\mathcal{C}$ is d
 
 E(C) = Σ I(i, j)
 
-where the interaction function $I(i,j)$ i:
+where the interaction function $I(i,j)$ i:
 
 I(i, j) = 
   -1, if pᵢ = pⱼ = H and |xᵢ - xⱼ| + |yᵢ - yⱼ| = 1  
    0, otherwise
 
 Here:
-$p_i$, $p_j$ denote the types (H or P) of the $i$th and $j$th amino acids.
+$p_i$, $p_j$ denote the types (H or P) of the ith and jth amino acids.
 $(x_i, y_i)$ and $(x_j, y_j)$ are their positions on the lattice.
 This rewards non-consecutive hydrophobic amino acids that are adjacent on the lattice.
 
 **State Representation**
 
-The lattice is a 2D grid $S \in {-1, 0, +1}^{(2n+1) \times (2n+1)}$ where:
-- \(+1\): Hydrophobic (H) amino aid- \(-1\): Polar (P) amino aid- \(0\): Empty spce
+The lattice is a 2D grid $S \in {-1, 0, +1}^{(2n+1) \times (2n+1)}$ where:
+
++1: Hydrophobic (H)
+-1: Polar (P)
+0: Empty
 
 **Action Space**
 
-The agent can choose from four discrete actios:
-- \(0\): Lft- \(1\): Dwn- \(2\):Up- \(3\): Riht
+The agent can choose from four discrete actios:
+
+0: Left
+1: Down
+2: Up
+3: Right
 
 **Reward Function**
 
