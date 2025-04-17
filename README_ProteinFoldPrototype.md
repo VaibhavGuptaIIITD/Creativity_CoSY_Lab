@@ -43,21 +43,21 @@ In this framework, protein folding is modeled as a sequential decision-making pr
 
 
 **Mathematical Formulation**
-The energy function \(E(\mathcal{C})\) for a given conformation \(\mathcal{C}\) is defined a:
 
-\[
-E(\mathcal{C}) = \sum_{i,j} I(i,j)
-\]
-where the interaction function \(I(i,j)\) i:
+The energy function \(E(\mathcal{C})\) for a given conformation \(\mathcal{C}\) is defined a:
 
-\[
-I(i,j) = \begin{cases}
--1 & \text{if } p_i = p_j = H \text{ and } |x_i - x_j| + |y_i - y_j| = 1 \\
-0 & \text{otherwise}
-\end{cases}
-\]
+E(C) = Σ I(i, j)
 
-Here, \(p_i\) and \(p_j\) denote the types (H or P) of the \(i^{th}\) and \(j^{th}\) amino acids, and \((x_i, y_i)\) and \((x_j, y_j)\) are their positions on the lattice. This function rewards non-consecutive hydrophobic (H) amino acids that are adjacent on the lattice, promoting the formation of a stable hydrophobic core.
+where the interaction function $I(i,j)$ i:
+
+I(i, j) = 
+  -1, if pᵢ = pⱼ = H and |xᵢ - xⱼ| + |yᵢ - yⱼ| = 1  
+   0, otherwise
+
+Here:
+$p_i$, $p_j$ denote the types (H or P) of the $i$th and $j$th amino acids.
+$(x_i, y_i)$ and $(x_j, y_j)$ are their positions on the lattice.
+This rewards non-consecutive hydrophobic amino acids that are adjacent on the lattice.
 
 **State Representation**
 
@@ -73,9 +73,7 @@ The lattice is represented as a 2D grid \(S \in \{-1, 0, +1\}^{(2n+1) \times (2n
 
 At each timestep \(t\), the reward \(r_t\) is computed s:
 
-\[
-r_t = \text{state\_reward} + \text{collision\_penalty} + \text{trap\_penalty}
-\]
+r_t = state_reward + collision_penalty + trap_penalty
 
 - **state_reward*: Calculated at the end of the episode as the total number of non-consecutive adjacent H-H pais.
 - **collision_penalty*: Applied when the agent attempts to place an amino acid on an already occupied space (default: \(-2\).
