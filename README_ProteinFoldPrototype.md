@@ -44,7 +44,7 @@ In this framework, protein folding is modeled as a sequential decision-making pr
 
 **Mathematical Formulation**
 
-The energy function \(E(\mathcal{C})\) for a given conformation \(\mathcal{C}\) is defined a:
+The energy function $E(\mathcal{C})$ for a given conformation $\mathcal{C}$ is defined as:
 
 E(C) = Σ I(i, j)
 
@@ -61,7 +61,7 @@ This rewards non-consecutive hydrophobic amino acids that are adjacent on the la
 
 **State Representation**
 
-The lattice is represented as a 2D grid \(S \in \{-1, 0, +1\}^{(2n+1) \times (2n+1)}\), where:
+The lattice is a 2D grid $S \in {-1, 0, +1}^{(2n+1) \times (2n+1)}$ where:
 - \(+1\): Hydrophobic (H) amino aid- \(-1\): Polar (P) amino aid- \(0\): Empty spce
 
 **Action Space**
@@ -71,13 +71,13 @@ The lattice is represented as a 2D grid \(S \in \{-1, 0, +1\}^{(2n+1) \times (2n
 
 **Reward Function**
 
-At each timestep \(t\), the reward \(r_t\) is computed s:
+At each timestep $t$, the reward $r_t$ is calculated as:
 
 r_t = state_reward + collision_penalty + trap_penalty
 
-- **state_reward*: Calculated at the end of the episode as the total number of non-consecutive adjacent H-H pais.
-- **collision_penalty*: Applied when the agent attempts to place an amino acid on an already occupied space (default: \(-2\).
-- **trap_penalty*: Applied if the agent traps itself, preventing the completion of the sequene.
+- **state_reward*: Calculated at the end of the episode as the total number of non-consecutive adjacent H-H pais.
+- **collision_penalty*: Applied when the agent attempts to place an amino acid on an already occupied space (default: -2).
+- **trap_penalty*: Applied if the agent traps itself, preventing the completion of the sequene.
 
 
 **Workflow Overview**
