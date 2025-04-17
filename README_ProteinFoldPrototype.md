@@ -14,7 +14,12 @@ For **initial proof-of-concept testing** with reinforcement learning (RL), the H
   Reward = Number of non-consecutive H-H contacts. Easy to compute and ideal for sparse reward RL [^4].  
 
 - **Benchmarked in RL Studies**  
-  Used in frameworks like [Gym-Lattice](https://ljvmiranda921.github.io/projects/2018/05/13/gym-lattice/) and [FoldingZero](https://arxiv.org/abs/1812.00967) [^5][^6].  
+  Used in frameworks like [Gym-Lattice](https://ljvmiranda921.github.io/projects/2018/05/13/gym-lattice/) and [FoldingZero](https://arxiv.org/abs/1812.00967) [^5][^6].
+
+### HP Model Overview  
+
+
+
 
 [^1]: Dill, K. A. (1985). "Theory for the folding and stability of globular proteins." *Biochemistry*.  
 [^2]: Lau, K. F. & Dill, K. A. (1989). "A lattice statistical mechanics model of the conformational and sequence spaces of proteins." *Macromolecules*.  
