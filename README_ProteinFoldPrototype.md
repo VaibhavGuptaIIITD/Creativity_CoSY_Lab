@@ -416,6 +416,100 @@ Each \(w_k\) can be tuned to balance its contribution. Together, these terms gui
 
 ---
 
+## Proposed Model
+
+The proposed model is a deep reinforcement learning framework that learns to fold proteins by optimizing a composite reward function. The model uses a protein's amino acid sequence as input and produces three-dimensional coordinates representing its folded structure.
+
+**Key Components**
+
+1. **State Space**: The state represents the current conformation of the protein, including:
+   - 3D coordinates of each residue
+   - Torsion angles (φ, ψ) along the backbone
+   - Current bond lengths
+   - Partial folding information
+
+2. **Action Space**: Actions modify the protein conformation through:
+   - Torsion angle adjustments
+   - Local refinement moves
+   - Fragment replacements
+   - Global topology modifications
+
+3. **Policy Network**: A neural network that predicts the optimal folding actions given the current state.
+
+4. **Value Network**: Estimates the expected future reward from the current state.
+
+5. **Environment**: Simulates protein physics and calculates the composite reward.
+
+6. **External Knowledge Integration**: Incorporates AlphaFold predictions, templates, and biophysical constraints.
+
+**Training Methodology**
+
+The model employs a variant of Proximal Policy Optimization (PPO) with these key features:
+
+1. **Curriculum Learning**: Training begins with small protein fragments and gradually increases complexity.
+
+2. **Multi-level Representation**: The model uses both coarse-grained (Cα backbone) and fine-grained (all-atom) representations at different stages.
+
+3. **Hybrid Exploration Strategy**:
+   - Intrinsic curiosity reward to discover novel conformations
+   - Temperature-scaled sampling during early training
+   - Gradually decreasing stochasticity as training progresses
+
+4. **Reward Shaping**: Dynamic adjustment of reward component weights based on training progress:
+   - Early stages: Emphasize basic physics (bond geometry, clash avoidance)
+   - Mid-stages: Increase importance of evolutionary information
+   - Late stages: Refinement with all components
+
+**State Representation**
+
+The state is encoded using:
+- Residue-level features (amino acid identity, hydrophobicity, charge)
+- Structural features (distances, angles, relative orientations)
+- Graph-based representation of residue interactions
+- External predictions from AlphaFold (pLDDT scores, predicted contacts)
+
+**Neural Network Architecture**
+
+1. **Encoder**:
+   - Graph Neural Network (GNN) to capture residue relationships
+   - Transformer encoder to process sequential information
+
+2. **Policy Network**:
+   - Actor-critic architecture
+   - Outputs probability distributions over actions
+   - Recurrent layers to maintain structural coherence
+
+3. **Forward Model**:
+   - Predicts next state after action execution
+   - Used for intrinsic reward calculation and planning
+
+**Environment Physics**
+
+The environment implements:
+- Fast differentiable simulation of protein backbone kinematics
+- Calculation of all reward components from the provided composite function
+- Enforcement of biophysical constraints through soft penalties
+
+**Algorithmic Overview**
+
+1. **Input Processing**:
+   - Parse amino acid sequence
+   - Generate initial random conformation
+   - Load AlphaFold predictions or templates if available
+
+2. **Training Loop**:
+   - Sample action from policy network
+   - Apply action to current state
+   - Calculate composite reward
+   - Update policy via PPO
+   - Update forward model to improve prediction accuracy
+
+3. **Refinement Phase**:
+   - Fine-tune structure with emphasis on local quality metrics
+   - Implement recycling consistency for convergence
+   - Apply side-chain packing and energy minimization
+
+---
 ## Changes Made in the HP model with Deep RL
 
 **1. Electrostatic Potential Function**
