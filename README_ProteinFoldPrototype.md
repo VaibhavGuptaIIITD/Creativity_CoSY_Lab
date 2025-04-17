@@ -516,161 +516,169 @@ The environment implements:
 ---
 ## Advice 1
 
+Below is the same README snippet, but with **plain‑text, ASCII‑friendly** formulas so they render unambiguously on GitHub.
+
+---
+
 ## Applying Deep Reinforcement Learning to the HP Model  
+*Yang et al., 2022*  
 
-**Paper**: [Applying Deep Reinforcement Learning to the HP Model for Protein Structure Prediction](https://github.com/CompSoftMatterBiophysics-CityU-HK/Applying-DRL-to-HP-Model-for-Protein-Structure-Prediction)  
+**Paper**: Applying Deep Reinforcement Learning to the HP Model for Protein Structure Prediction  
 
 ---
 
-**1. HP Model on a 2D Square Lattice**
+### 1. HP Model on a 2D Square Lattice
 
-A protein of length \(N\) is a self‑avoiding walk (SAW) on the integer lattice.  
-- **Sequence**: \(S=(p_1,\dots,p_N)\), each \(p_i\in\{H,P\}\).  
-- **Backbone adjacency**  
-  \[
-  |i-j|=1 \;\Longrightarrow\; |x_i - x_j| + |y_i - y_j| = 1.
-  \]
-- **Self‑avoidance**  
-  \[
-  i\neq j \;\Longrightarrow\;(x_i,y_i)\neq(x_j,y_j).
-  \]
-- **Energy**  
-  \[
-  E(\mathcal{C}) 
-  = -\sum_{\substack{i<j \\ |i-j|>1}}
-    \mathbb{1}\bigl[p_i=p_j=H \,\wedge\, |x_i-x_j|+|y_i-y_j|=1\bigr].
-  \]
-  Maximize H–H non‑bonded contacts \(\Longleftrightarrow\) minimize \(E\).
+A protein of length N is a self‑avoiding walk (SAW) on the integer lattice.  
+- **Sequence**: `S = (p1, …, pN)`, each `pi ∈ {H, P}`  
+- **Backbone adjacency** (neighboring monomers must sit on adjacent grid points):  
 
-**2. MDP Formulation**
+  if |i – j| = 1 then
+     |x_i – x_j| + |y_i – y_j| = 1
 
-- **States** \(\;s_t\in S\): current partial SAW embedding + residue types.  
-- **Actions** \(\;a_t\in A_3=\{L,F,R\}\): turn Left/Forward/Right for next monomer.  
-- **Transition** enforces Eqs (1)–(2) (no overlap, lattice connectivity).  
-- **Reward** (sparse)  
-  \[
-    r_{t} = 
-    \begin{cases}
-      |E(s_T)|, & t=T\ (\text{all }N\text{ placed}),\\
-      0,        & \text{otherwise.}
-    \end{cases}
-  \]
+- **Self‑avoidance** (no two monomers occupy the same site):  
 
-**3. Deep Q‑Network (DQN)**
+  if i ≠ j then
+     (x_i, y_i) ≠ (x_j, y_j)
 
-We approximate the optimal \(Q^*(s,a)\) with a neural net \(Q(s,a;\theta)\).  
+- **Energy of conformation C** (minus number of non‑bonded H–H contacts):  
 
-1. **Bellman optimality**  
-   \[
-   Q^*(s,a)
-   = \mathbb{E}\bigl[r_{t+1} + \gamma\,\max_{a'} Q^*(s_{t+1},a') \mid s_t=s,a_t=a\bigr].
-   \]
-2. **Target network** \(\hat Q(s,a;\hat\theta)\) updated every \(C\) steps to stabilize learning.  
-3. **TD‐error**  
-   \[
-   \delta 
-   = \bigl(r + \gamma\,\max_{a'}\hat Q(s',a';\hat\theta)\bigr) - Q(s,a;\theta).
-   \]
-4. **Huber loss** (per minibatch \(\mathcal B\))  
-   \[
-   L(\delta) = 
-   \begin{cases}
-     \tfrac12\delta^2, & |\delta|\le1,\\
-     |\delta|-0.5,     & \text{otherwise},
-   \end{cases}
-   \quad
-   \mathcal L = \frac1{|\mathcal B|}\sum_{(s,a,r,s')\in\mathcal B}L(\delta).
-   \]
+  E(C) = – ∑_{i<j, |i–j|>1} 1{ p_i = H AND p_j = H AND |x_i–x_j|+|y_i–y_j| = 1 }
 
-**4. Exploration–Exploitation**
+  The agent seeks to **minimize** E(C).
 
-- **\(\varepsilon\)–greedy**:  
-  \[
-    a_t = 
-    \begin{cases}
-      \arg\max_a Q(s_t,a;\theta), & \text{w.p. }1-\varepsilon,\\
-      \text{Uniform}(A_3),        & \text{w.p. }\varepsilon.
-    \end{cases}
-  \]
-- **Decay schedule**  
-  \[
-  \varepsilon_i
-  = \varepsilon_{\min} 
-    + (\varepsilon_{\max}-\varepsilon_{\min})
-      \exp\!\bigl(-\,i\,\lambda/\Psi\bigr),
-  \]
-  with \(\varepsilon_{\max}=1\), \(\varepsilon_{\min}=0.01\), \(\lambda=5\), \(\Psi\)=total episodes.
+---
 
-**5. State Representation & Network Architecture**
+### 2. MDP Formulation
 
-- **One‑hot encoding** of length‑\(N\) action+residue sequence → a binary \(N\times6\) array.  
-- **LSTM‑DQN**: stacked LSTM + dense head → 3 Q‑values.  
-  - \(N\le36\): 2×256‑unit LSTM layers.  
-  - \(N>36\): 3×512‑unit LSTM layers.  
+- **State** `s_t`: current partial SAW positions + residue types.  
+- **Action** `a_t ∈ {L, F, R}`: turn Left, Forward, or Right to place the next monomer.  
+- **Transition** enforces the adjacency and self‑avoidance rules above.  
+- **Reward** (sparse—only at end of walk):  
 
-**6. Training Details**
+  if t = T (i.e. all N placed) then
+    r_t = |E(s_T)|
+  else
+    r_t = 0
 
-| Parameter              | Value                        |
-|------------------------|------------------------------|
-| Discount \(\gamma\)    | 0.98                         |
-| Replay memory size     | \(\min(50\,000,\Psi/10)\)    |
-| Batch size             | 32                           |
-| Target update \(C\)    | 100                          |
-| Optimizer              | Adam (lr = 0.0005)           |
-| Episodes per sequence  | 100 K–600 K (↑ with \(N\))   |
 
-**7. Workflow**
+---
 
-```
+### 3. Deep Q‑Network (DQN)
+
+Approximate the optimal value Q*(s,a) using a neural net Q(s,a;θ).
+
+1. **Bellman update**  
+
+   Q*(s, a) = E[ r_{t+1}
+                  + γ * max_{a'} Q*(s_{t+1}, a')
+                | s_t = s, a_t = a ]
+
+2. **Target network** Q̂(s,a;θ̂) is a periodic copy of Q(s,a;θ) to stabilize training.  
+3. **TD‑error**  
+
+   δ = (r + γ * max_{a'} Q̂(s',a';θ̂)) – Q(s,a;θ)
+
+4. **Huber loss** on δ (average over a minibatch B):  
+
+   L(δ) = { 0.5*δ²      if |δ| ≤ 1
+            |δ| – 0.5  otherwise }
+   loss = (1/|B|) * ∑_{(s,a,r,s')∈B} L(δ)
+
+
+---
+
+### 4. Exploration vs. Exploitation
+
+- **ε‑greedy policy**  
+
+  with prob. ε: pick a_t uniformly at random  
+  else       : pick a_t = argmax_a Q(s_t, a; θ)
+
+- **Decay schedule for ε over episode index i**  
+
+  ε_i = ε_min
+        + (ε_max – ε_min) * exp( – i * λ / total_episodes )
+
+  where  
+
+  ε_max = 1.0,  ε_min = 0.01,  λ = 5
+
+
+---
+
+### 5. State Encoding & Network
+
+- **One‑hot encoding**: represent the length‑N sequence of (action_so_far + residue_type) as an N×6 binary array.  
+- **LSTM‑DQN**: stack of LSTM layers + final fully connected head → 3 real‑valued Q outputs.  
+  - For N ≤ 36: use 2 LSTM layers of 256 units each.  
+  - For N > 36: use 3 LSTM layers of 512 units each.
+
+---
+
+### 6. Training Hyperparameters
+
+| Parameter              | Value                       |
+|------------------------|-----------------------------|
+| Discount factor γ      | 0.98                        |
+| Replay memory size     | min(50 000, total_eps/10)   |
+| Minibatch size         | 32                          |
+| Target update period   | every 100 gradient steps    |
+| Optimizer              | Adam, learning rate = 0.0005|
+| Episodes per sequence  | 100 K–600 K (↑ with N)      |
+
+---
+
+### 7. Training Loop
+
+```plaintext
 Initialize Q(θ), Q̂(θ̂), replay buffer D.
-for episode = 1…Ψ:
-  ε ← compute_epsilon(episode)
-  Reset environment → s₀
-  for t = 0…N−1:
-    With prob ε: pick random aₜ∈A₃ else aₜ=argmaxₐQ(sₜ,a;θ)
-    Execute aₜ → observe s_{t+1}, r_{t+1}
-    Store (sₜ,aₜ,r_{t+1},s_{t+1}) in D
-    Sample minibatch B from D
-    Compute δ and loss ℓ on B
-    θ ← θ − α∇ₜℓ
-    Every C steps: θ̂←θ
-    sₜ←s_{t+1}
-  end
-end
+for episode = 1 to total_episodes:
+  ε = compute_epsilon(episode)
+  Reset env → state s_0
+  for t = 0 to N–1:
+    choose action a_t via ε‑greedy on Q(s_t, ·; θ)
+    step → observe (s_{t+1}, r_{t+1})
+    store (s_t, a_t, r_{t+1}, s_{t+1}) in D
+    sample minibatch B from D
+    compute TD error δ and Huber loss over B
+    update θ via Adam gradient step
+    every 100 steps: set θ̂ ← θ
+    s_t ← s_{t+1}
+  endfor
+endfor
 ```
 
 ---
 
-## Improvements Made in Functions & Training
+## Suggested Improvements to Your New Components
 
 1. **Electrostatic Potential**  
-   - **Distance cutoff**: ignore pairs beyond a cutoff \(r_c\) (e.g. 10 Å) to save compute.  
-   - **Dielectric screening**: include a distance‑dependent dielectric \(\varepsilon(r)\) or constant \(\varepsilon_r\):  
-     \[
-       E_{ij} = \frac{k_e\,q_i\,q_j}{\varepsilon_r\;r_{ij}}.
-     \]
-   - **Variable charges**: assign \(q_i\) based on residue pKa or partial charges, not just \(\{0,-1\}\).  
-   - **Symmetry factor**: ensure each unique \(i<j\) only counted once (divide by 2 if looping all pairs).
+   - Add a **distance cutoff** `r_c` to ignore far‐apart pairs for speed.  
+   - Include a **dielectric constant** ε_r:  
+     ```
+     E_elec = k_e * q_i * q_j / (ε_r * r_ij)
+     ```
+   - Allow **variable charges** (e.g. partial charges) rather than only {0, –1}.  
 
 2. **Van der Waals (Lennard–Jones)**  
-   - **Shifted potential**: apply a smooth cutoff with energy shift so \(E(r_c)=0\), improving stability.  
-   - **Neighbor lists**: build/update Verlet lists to reduce \(\mathcal O(N^2)\) loops.  
-   - **Parameter fitting**: tune \(\sigma\), \(\varepsilon\) for HP coarse beads rather than generic atom values.  
-   - **Exclude bonded**: skip not only nearest neighbors but also next‑nearest (i±2) to avoid double counting.
+   - Use a **shifted or truncated LJ** so that `E_LJ(r_c) = 0` for better stability.  
+   - Maintain a **Verlet neighbor list** to reduce O(N²) to O(N).  
+   - Exclude both **i±1** and **i±2** bonded interactions to avoid overlaps.
 
 3. **Reward Function**  
-   - **Composite reward**: combine hydrophobic core score \(|E_{\mathrm{HP}}|\) with new terms:  
-     \[
-       r = \alpha\,|E_{\mathrm{HP}}| \;+\;\beta\,\sum_{i<j}E_{ij}^\text{elec} \;+\;\gamma\,\sum_{i<j}E_{ij}^\text{LJ}.
-     \]
-   - **Normalization**: scale each term to similar magnitudes, preventing one from dominating.  
-   - **Intermediate rewards**: give small rewards/penalties at each step for collisions or favorable contacts to smooth training.
+   - Combine terms with weights:  
+     ```
+     r = α * |E_HP|  +  β * E_elec_total  +  γ * E_LJ_total
+     ```
+   - **Normalize** each energy term so none dominates.  
+   - Give **small stepwise rewards/penalties** (e.g. for collisions) to smooth the learning signal.
 
 4. **Training & Logging**  
-   - **Early stopping**: monitor validation energy plateau over \(M\) episodes; stop if no improvement.  
-   - **TensorBoard**: log scalars (loss, rewards, ε), histograms (Q‑values), and episode videos.  
-   - **Hyperparameter sweep**: automate grid or Bayesian search for \(\gamma\), learning rate, batch size, network depth.  
-   - **Seed control**: fix both Python/Numpy/PyTorch seeds and document them; report mean ± std over ≥5 runs.
+   - Implement **early stopping** when validation energy plateaus over M episodes.  
+   - Log to **TensorBoard**: rewards, losses, ε, and sample folded‐path videos.  
+   - Run **hyperparameter sweeps** (learning rate, batch size, γ, network size).  
+   - Fix all random seeds (Python/Numpy/PyTorch) and report mean ± std over ≥ 5 runs.
 
 ![training](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/moving_avg-500.png?raw=true)
 
