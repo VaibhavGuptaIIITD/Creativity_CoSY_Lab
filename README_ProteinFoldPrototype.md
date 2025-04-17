@@ -33,17 +33,16 @@ For **initial proof-of-concept testing** with reinforcement learning (RL), the H
 
 ### Gym-Lattice Environment for Protein Folding
 
-The Gym-Lattice project by Lester James Miranda is a reinforcement learning (RL) environment designed to simulate the protein folding problem using the 2D Hydrophobic-Polar (HP) lattice model. This environment formulates protein folding as a Markov Decision Process (MDP), enabling RL agents to learn optimal folding strategies.
+The Gym-Lattice project by Lester James Miranda is a reinforcement learning (RL) environment designed to simulate the protein folding problem using the 2D Hydrophobic-Polar (HP) lattice model. This environment formulates protein folding as a Markov Decision Process (MDP), enabling RL agents to learn optimal folding strategies.
 
-In this framework, protein folding is modeled as a sequential decision-making process
+In this framework, protein folding is modeled as a sequential decision-making process
 
-- **States (\(s_t\))**:Represent the current configuration of the protein on a 2D lattice
-- **Actions (\(a_t\))**:Choices to place the next amino acid in one of four directions—left, down, up, or right
-- **Rewards (\(r_t\))**:Feedback based on the stability of the resulting structure, with penalties for invalid moves
-The agent aims to learn a policy \(\pi(a_t | s_t)\) that maximizes the expected cumulative reward over an episode
+- **States (\(s_t\))**: Represent the current configuration of the protein on a 2D lattice.
+- **Actions (\(a_t\))**: Choices to place the next amino acid in one of four directions—left, down, up, or right.
+- **Rewards (\(r_t\))**: Feedback based on the stability of the resulting structure, with penalties for invalid moves. The agent aims to learn a policy \(\pi(a_t | s_t)\) that maximizes the expected cumulative reward over an episode.
 
 
-### 🔢 Mathematical Formulation
+**Mathematical Formulation**
 The energy function \(E(\mathcal{C})\) for a given conformation \(\mathcal{C}\) is defined a:
 
 \[
@@ -58,11 +57,11 @@ I(i,j) = \begin{cases}
 \end{cases}
 \]
 
-Here, \(p_i\) and \(p_j\) denote the types (H or P) of the \(i^{th}\) and \(j^{th}\) amino acids, and \((x_i, y_i)\) and \((x_j, y_j)\) are their positions on the lattice. This function rewards non-consecutive hydrophobic (H) amino acids that are adjacent on the lattice, promoting the formation of a stable hydrophobic cor.
+Here, \(p_i\) and \(p_j\) denote the types (H or P) of the \(i^{th}\) and \(j^{th}\) amino acids, and \((x_i, y_i)\) and \((x_j, y_j)\) are their positions on the lattice. This function rewards non-consecutive hydrophobic (H) amino acids that are adjacent on the lattice, promoting the formation of a stable hydrophobic core.
 
 **State Representation**
 
-The lattice is represented as a 2D grid \(S \in \{-1, 0, +1\}^{(2n+1) \times (2n+1)}\), whee:
+The lattice is represented as a 2D grid \(S \in \{-1, 0, +1\}^{(2n+1) \times (2n+1)}\), where:
 - \(+1\): Hydrophobic (H) amino aid- \(-1\): Polar (P) amino aid- \(0\): Empty spce
 
 **Action Space**
@@ -83,18 +82,16 @@ r_t = \text{state\_reward} + \text{collision\_penalty} + \text{trap\_penalty}
 - **trap_penalty*: Applied if the agent traps itself, preventing the completion of the sequene.
 
 
-### 🔄 Workflow Overview
+**Workflow Overview**
 
-1. **Initialization*: The environment is initialized with a given HP sequece.
-2. **Agent Decision*: At each step, the agent selects an action based on the current stte.
-3. **Environment Update*: The environment updates the lattice configuration based on the acton.
-4. **Reward Calculation*: The environment computes the reward and checks for termination conditins.
-5. **Iteration*: Steps 2–4 are repeated until the sequence is fully placed or the agent is traped.
-
-
+1. **Initialization*: The environment is initialized with a given HP sequece.
+2. **Agent Decision*: At each step, the agent selects an action based on the current stte.
+3. **Environment Update*: The environment updates the lattice configuration based on the acton.
+4. **Reward Calculation*: The environment computes the reward and checks for termination conditins.
+5. **Iteration*: Steps 2–4 are repeated until the sequence is fully placed or the agent is traped.
 
 
-The Gym-Lattice environment provides a simplified yet insightful platform for exploring protein folding through reinforcement learig. By abstracting the complex nature of proteins into a 2D lattice model, it allows researchers and enthusiasts to experiment with RL algorithms in a controlled seting.
+The Gym-Lattice environment provides a simplified yet insightful platform for exploring protein folding through reinforcement learig. By abstracting the complex nature of proteins into a 2D lattice model, it allows researchers and enthusiasts to experiment with RL algorithms in a controlled seting.
 
 
 
