@@ -514,74 +514,176 @@ The environment implements:
    - Apply side-chain packing and energy minimization
 
 ---
-## Changes Made in the HP model with Deep RL
+## Advice 1
 
-**1. Electrostatic Potential Function**
+## Applying Deep Reinforcement Learning to the HP Model  
 
-The function compute_electrostatic_potential calculates the electrostatic energy between pairs of residues in a conformation using a simplified version of Coulomb’s law. In the context of a simplified hydrophobic–polar (HP) model, only polar (P) residues are given a nonzero charge, while hydrophobic (H) residues are treated as neutral.
+**Paper**: [Applying Deep Reinforcement Learning to the HP Model for Protein Structure Prediction](https://github.com/CompSoftMatterBiophysics-CityU-HK/Applying-DRL-to-HP-Model-for-Protein-Structure-Prediction)  
 
-The function assigns a fixed charge to each residue based on its type:
+---
 
-Hydrophobic (H): charge = 0
+**1. HP Model on a 2D Square Lattice**
 
-Polar (P): charge = –1
+A protein of length \(N\) is a self‑avoiding walk (SAW) on the integer lattice.  
+- **Sequence**: \(S=(p_1,\dots,p_N)\), each \(p_i\in\{H,P\}\).  
+- **Backbone adjacency**  
+  \[
+  |i-j|=1 \;\Longrightarrow\; |x_i - x_j| + |y_i - y_j| = 1.
+  \]
+- **Self‑avoidance**  
+  \[
+  i\neq j \;\Longrightarrow\;(x_i,y_i)\neq(x_j,y_j).
+  \]
+- **Energy**  
+  \[
+  E(\mathcal{C}) 
+  = -\sum_{\substack{i<j \\ |i-j|>1}}
+    \mathbb{1}\bigl[p_i=p_j=H \,\wedge\, |x_i-x_j|+|y_i-y_j|=1\bigr].
+  \]
+  Maximize H–H non‑bonded contacts \(\Longleftrightarrow\) minimize \(E\).
 
-Pairwise Interaction:
+**2. MDP Formulation**
 
-The code then uses a double loop to examine every unique pair of residues. For each pair (i,j):
+- **States** \(\;s_t\in S\): current partial SAW embedding + residue types.  
+- **Actions** \(\;a_t\in A_3=\{L,F,R\}\): turn Left/Forward/Right for next monomer.  
+- **Transition** enforces Eqs (1)–(2) (no overlap, lattice connectivity).  
+- **Reward** (sparse)  
+  \[
+    r_{t} = 
+    \begin{cases}
+      |E(s_T)|, & t=T\ (\text{all }N\text{ placed}),\\
+      0,        & \text{otherwise.}
+    \end{cases}
+  \]
 
-It calculates the Euclidean distance between their positions.
+**3. Deep Q‑Network (DQN)**
 
-It computes the contribution of their interaction using the formula:
+We approximate the optimal \(Q^*(s,a)\) with a neural net \(Q(s,a;\theta)\).  
 
-e = (ke * qi * qj) / r
+1. **Bellman optimality**  
+   \[
+   Q^*(s,a)
+   = \mathbb{E}\bigl[r_{t+1} + \gamma\,\max_{a'} Q^*(s_{t+1},a') \mid s_t=s,a_t=a\bigr].
+   \]
+2. **Target network** \(\hat Q(s,a;\hat\theta)\) updated every \(C\) steps to stabilize learning.  
+3. **TD‐error**  
+   \[
+   \delta 
+   = \bigl(r + \gamma\,\max_{a'}\hat Q(s',a';\hat\theta)\bigr) - Q(s,a;\theta).
+   \]
+4. **Huber loss** (per minibatch \(\mathcal B\))  
+   \[
+   L(\delta) = 
+   \begin{cases}
+     \tfrac12\delta^2, & |\delta|\le1,\\
+     |\delta|-0.5,     & \text{otherwise},
+   \end{cases}
+   \quad
+   \mathcal L = \frac1{|\mathcal B|}\sum_{(s,a,r,s')\in\mathcal B}L(\delta).
+   \]
 
-Here, qi and qj are the charge of residues, r is the Euclidean distance (computed via the euclidean_distance helper function), and ke is a proportionality constant that can be tuned.
+**4. Exploration–Exploitation**
 
+- **\(\varepsilon\)–greedy**:  
+  \[
+    a_t = 
+    \begin{cases}
+      \arg\max_a Q(s_t,a;\theta), & \text{w.p. }1-\varepsilon,\\
+      \text{Uniform}(A_3),        & \text{w.p. }\varepsilon.
+    \end{cases}
+  \]
+- **Decay schedule**  
+  \[
+  \varepsilon_i
+  = \varepsilon_{\min} 
+    + (\varepsilon_{\max}-\varepsilon_{\min})
+      \exp\!\bigl(-\,i\,\lambda/\Psi\bigr),
+  \]
+  with \(\varepsilon_{\max}=1\), \(\varepsilon_{\min}=0.01\), \(\lambda=5\), \(\Psi\)=total episodes.
 
-**2. Van der Waals (VdW) Potential Function**
+**5. State Representation & Network Architecture**
 
-The compute_vdw_potential function computes the Lennard–Jones potential, which is commonly used to model van der Waals interactions. This potential captures both the attractive forces at moderate distances and the strong repulsion when atoms get too close.
+- **One‑hot encoding** of length‑\(N\) action+residue sequence → a binary \(N\times6\) array.  
+- **LSTM‑DQN**: stacked LSTM + dense head → 3 Q‑values.  
+  - \(N\le36\): 2×256‑unit LSTM layers.  
+  - \(N>36\): 3×512‑unit LSTM layers.  
 
-Lennard–Jones Formula:
+**6. Training Details**
 
-e = 4 * ϵ [ (σ/r)^12 - (σ/r)^6 ]
+| Parameter              | Value                        |
+|------------------------|------------------------------|
+| Discount \(\gamma\)    | 0.98                         |
+| Replay memory size     | \(\min(50\,000,\Psi/10)\)    |
+| Batch size             | 32                           |
+| Target update \(C\)    | 100                          |
+| Optimizer              | Adam (lr = 0.0005)           |
+| Episodes per sequence  | 100 K–600 K (↑ with \(N\))   |
 
-ϵ: Depth of the potential well. This parameter sets the energy scale.
+**7. Workflow**
 
-σ: Distance scale that typically corresponds to the “contact” distance between the residues.
+```
+Initialize Q(θ), Q̂(θ̂), replay buffer D.
+for episode = 1…Ψ:
+  ε ← compute_epsilon(episode)
+  Reset environment → s₀
+  for t = 0…N−1:
+    With prob ε: pick random aₜ∈A₃ else aₜ=argmaxₐQ(sₜ,a;θ)
+    Execute aₜ → observe s_{t+1}, r_{t+1}
+    Store (sₜ,aₜ,r_{t+1},s_{t+1}) in D
+    Sample minibatch B from D
+    Compute δ and loss ℓ on B
+    θ ← θ − α∇ₜℓ
+    Every C steps: θ̂←θ
+    sₜ←s_{t+1}
+  end
+end
+```
 
-r: Euclidean distance between nonbonded residues.
+---
 
-Skipping Backbone Neighbors: In a polymer chain (like a protein), sequential residues are connected by bonds. The function skips immediate neighbors (and optionally near-neighbors) because their relative positions are dictated by the chain connectivity, and their interactions do not need to be recalculated as part of nonbonded interactions.
+## Improvements Made in Functions & Training
 
+1. **Electrostatic Potential**  
+   - **Distance cutoff**: ignore pairs beyond a cutoff \(r_c\) (e.g. 10 Å) to save compute.  
+   - **Dielectric screening**: include a distance‑dependent dielectric \(\varepsilon(r)\) or constant \(\varepsilon_r\):  
+     \[
+       E_{ij} = \frac{k_e\,q_i\,q_j}{\varepsilon_r\;r_{ij}}.
+     \]
+   - **Variable charges**: assign \(q_i\) based on residue pKa or partial charges, not just \(\{0,-1\}\).  
+   - **Symmetry factor**: ensure each unique \(i<j\) only counted once (divide by 2 if looping all pairs).
 
-The Reward Function is modified accordingly.
+2. **Van der Waals (Lennard–Jones)**  
+   - **Shifted potential**: apply a smooth cutoff with energy shift so \(E(r_c)=0\), improving stability.  
+   - **Neighbor lists**: build/update Verlet lists to reduce \(\mathcal O(N^2)\) loops.  
+   - **Parameter fitting**: tune \(\sigma\), \(\varepsilon\) for HP coarse beads rather than generic atom values.  
+   - **Exclude bonded**: skip not only nearest neighbors but also next‑nearest (i±2) to avoid double counting.
 
-**Training Model**
+3. **Reward Function**  
+   - **Composite reward**: combine hydrophobic core score \(|E_{\mathrm{HP}}|\) with new terms:  
+     \[
+       r = \alpha\,|E_{\mathrm{HP}}| \;+\;\beta\,\sum_{i<j}E_{ij}^\text{elec} \;+\;\gamma\,\sum_{i<j}E_{ij}^\text{LJ}.
+     \]
+   - **Normalization**: scale each term to similar magnitudes, preventing one from dominating.  
+   - **Intermediate rewards**: give small rewards/penalties at each step for collisions or favorable contacts to smooth training.
 
-
-So the training has info logged as (example case) :
-
-Sequence (seq): For example, PPHHPPHPPHHPPPHHPP
-
-Seed: The random seed (e.g., 42)
-
-Algorithm identifier (algo): In this run it shows as RAND 
-
-Number of episodes: e.g., 10000
-
-Use early stop flag: 0 means early stopping is not used
+4. **Training & Logging**  
+   - **Early stopping**: monitor validation energy plateau over \(M\) episodes; stop if no improvement.  
+   - **TensorBoard**: log scalars (loss, rewards, ε), histograms (Q‑values), and episode videos.  
+   - **Hyperparameter sweep**: automate grid or Bayesian search for \(\gamma\), learning rate, batch size, network depth.  
+   - **Seed control**: fix both Python/Numpy/PyTorch seeds and document them; report mean ± std over ≥5 runs.
 
 ![training](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/moving_avg-500.png?raw=true)
 
 The above image provides a visual summary of the learning progress by smoothing the episode rewards over a window of 500 episodes, helping track whether the agent’s performance is improving steadily over time. 
 
-X-Axis (Episode Index): The x-axis represents the training episodes, usually scaled in thousands (K) if using a large number of episodes.
+**X-Axis (Episode Index)**: The x-axis represents the training episodes, usually scaled in thousands (K) if using a large number of episodes.
 
-Y-Axis (Moving Average of Rewards): The y-axis shows the average reward computed over the past 500 episodes. Since the rewards are negative (energy minimization), a more negative moving average indicates that the agent has found lower-energy (better) conformations.
+**Y-Axis (Moving Average of Rewards)**: The y-axis shows the average reward computed over the past 500 episodes. Since the rewards are negative (energy minimization), a more negative moving average indicates that the agent has found lower-energy (better) conformations.
 
----
+5. **Moving‑Average Plot**  
+   - **Window size**: experiment with shorter (100) vs. longer (1000) windows to balance smoothness vs. responsiveness.  
+   - **Variance shading**: plot ± one standard deviation around the moving average for stability insight.  
+   - **Alternative metric**: show min/median/max rewards in each window to highlight outlier successes.
 
 [^13]: Cornell, W. D. et al. (1995). *JACS*, 117(19), 5179–5197. [DOI](https://doi.org/10.1021/ja00124a002) (AMBER)  
 [^14]: Engh, R. A. & Huber, R. (1991). *Acta Cryst.*, A47(4), 392–400. [DOI](https://doi.org/10.1107/S0108767391001071)  
