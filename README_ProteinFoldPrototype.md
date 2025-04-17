@@ -420,6 +420,10 @@ Each \(w_k\) can be tuned to balance its contribution. Together, these terms gui
 
 The proposed model is a deep reinforcement learning framework that learns to fold proteins by optimizing a composite reward function. The model uses a protein's amino acid sequence as input and produces three-dimensional coordinates representing its folded structure.
 
+
+![proposed model](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/Screenshot%202025-04-18%20at%2000.53.12.png?raw=true)
+
+
 **Key Components**
 
 1. **State Space**: The state represents the current conformation of the protein, including:
