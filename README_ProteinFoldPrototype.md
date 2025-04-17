@@ -525,6 +525,10 @@ The environment implements:
 
 ---
 
+
+![48mergif](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/48mer_E23.gif?raw=true)
+
+
 **1. HP Model on a 2D Square Lattice**
 
 A protein of length N is a self‑avoiding walk (SAW) on the integer lattice.  
