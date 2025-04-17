@@ -516,79 +516,68 @@ The environment implements:
 ---
 ## Advice 1
 
-Below is the same README snippet, but with **plain‑text, ASCII‑friendly** formulas so they render unambiguously on GitHub.
+## Applying Deep Reinforcement Learning to the HP Model   
+
+**Paper**: [Applying Deep Reinforcement Learning to the HP Model for Protein Structure Prediction](https://github.com/CompSoftMatterBiophysics-CityU-HK/Applying-DRL-to-HP-Model-for-Protein-Structure-Prediction)    
 
 ---
 
-## Applying Deep Reinforcement Learning to the HP Model  
-*Yang et al., 2022*  
-
-**Paper**: Applying Deep Reinforcement Learning to the HP Model for Protein Structure Prediction  
-
----
-
-### 1. HP Model on a 2D Square Lattice
+**1. HP Model on a 2D Square Lattice**
 
 A protein of length N is a self‑avoiding walk (SAW) on the integer lattice.  
-- **Sequence**: `S = (p1, …, pN)`, each `pi ∈ {H, P}`  
+- **Sequence**: S = (p1, …, pN), each pi ∈ {H, P}  
 - **Backbone adjacency** (neighboring monomers must sit on adjacent grid points):  
 
-  if |i – j| = 1 then
-     |x_i – x_j| + |y_i – y_j| = 1
+  **if |i – j| = 1 then
+     |x_i – x_j| + |y_i – y_j| = 1**
 
 - **Self‑avoidance** (no two monomers occupy the same site):  
 
-  if i ≠ j then
-     (x_i, y_i) ≠ (x_j, y_j)
+  **if i ≠ j then
+     (x_i, y_i) ≠ (x_j, y_j)**
 
 - **Energy of conformation C** (minus number of non‑bonded H–H contacts):  
 
-  E(C) = – ∑_{i<j, |i–j|>1} 1{ p_i = H AND p_j = H AND |x_i–x_j|+|y_i–y_j| = 1 }
+  **E(C) = – ∑_{i<j, |i–j|>1} 1{ p_i = H AND p_j = H AND |x_i–x_j|+|y_i–y_j| = 1 }**
 
   The agent seeks to **minimize** E(C).
 
----
-
-### 2. MDP Formulation
+**2. MDP Formulation**
 
 - **State** `s_t`: current partial SAW positions + residue types.  
 - **Action** `a_t ∈ {L, F, R}`: turn Left, Forward, or Right to place the next monomer.  
 - **Transition** enforces the adjacency and self‑avoidance rules above.  
 - **Reward** (sparse—only at end of walk):  
 
-  if t = T (i.e. all N placed) then
+  **if t = T (i.e. all N placed) then
     r_t = |E(s_T)|
   else
-    r_t = 0
+    r_t = 0**
 
 
----
-
-### 3. Deep Q‑Network (DQN)
+**3. Deep Q‑Network (DQN)**
 
 Approximate the optimal value Q*(s,a) using a neural net Q(s,a;θ).
 
 1. **Bellman update**  
 
-   Q*(s, a) = E[ r_{t+1}
+   **Q*(s, a) = E[ r_{t+1}
                   + γ * max_{a'} Q*(s_{t+1}, a')
-                | s_t = s, a_t = a ]
+                | s_t = s, a_t = a ]**
 
 2. **Target network** Q̂(s,a;θ̂) is a periodic copy of Q(s,a;θ) to stabilize training.  
 3. **TD‑error**  
 
-   δ = (r + γ * max_{a'} Q̂(s',a';θ̂)) – Q(s,a;θ)
+   **δ = (r + γ * max_{a'} Q̂(s',a';θ̂)) – Q(s,a;θ)**
 
 4. **Huber loss** on δ (average over a minibatch B):  
 
-   L(δ) = { 0.5*δ²      if |δ| ≤ 1
+   **L(δ) = { 0.5*δ²      if |δ| ≤ 1
             |δ| – 0.5  otherwise }
-   loss = (1/|B|) * ∑_{(s,a,r,s')∈B} L(δ)
+   loss = (1/|B|) * ∑_{(s,a,r,s')∈B} L(δ)**
 
 
----
-
-### 4. Exploration vs. Exploitation
+**4. Exploration vs. Exploitation**
 
 - **ε‑greedy policy**  
 
@@ -597,26 +586,22 @@ Approximate the optimal value Q*(s,a) using a neural net Q(s,a;θ).
 
 - **Decay schedule for ε over episode index i**  
 
-  ε_i = ε_min
-        + (ε_max – ε_min) * exp( – i * λ / total_episodes )
+ **ε_i = ε_min
+        + (ε_max – ε_min) * exp( – i * λ / total_episodes )**
 
   where  
 
-  ε_max = 1.0,  ε_min = 0.01,  λ = 5
+  **ε_max = 1.0,  ε_min = 0.01,  λ = 5**
 
 
----
-
-### 5. State Encoding & Network
+**5. State Encoding & Network**
 
 - **One‑hot encoding**: represent the length‑N sequence of (action_so_far + residue_type) as an N×6 binary array.  
 - **LSTM‑DQN**: stack of LSTM layers + final fully connected head → 3 real‑valued Q outputs.  
   - For N ≤ 36: use 2 LSTM layers of 256 units each.  
   - For N > 36: use 3 LSTM layers of 512 units each.
 
----
-
-### 6. Training Hyperparameters
+**6. Training Hyperparameters**
 
 | Parameter              | Value                       |
 |------------------------|-----------------------------|
@@ -627,11 +612,9 @@ Approximate the optimal value Q*(s,a) using a neural net Q(s,a;θ).
 | Optimizer              | Adam, learning rate = 0.0005|
 | Episodes per sequence  | 100 K–600 K (↑ with N)      |
 
----
+**7. Training Loop**
 
-### 7. Training Loop
-
-```plaintext
+```
 Initialize Q(θ), Q̂(θ̂), replay buffer D.
 for episode = 1 to total_episodes:
   ε = compute_epsilon(episode)
@@ -649,16 +632,14 @@ for episode = 1 to total_episodes:
 endfor
 ```
 
----
-
-## Suggested Improvements to Your New Components
+**Improvements Done in the Model**
 
 1. **Electrostatic Potential**  
    - Add a **distance cutoff** `r_c` to ignore far‐apart pairs for speed.  
    - Include a **dielectric constant** ε_r:  
-     ```
-     E_elec = k_e * q_i * q_j / (ε_r * r_ij)
-     ```
+
+     **E_elec = k_e * q_i * q_j / (ε_r * r_ij)**
+
    - Allow **variable charges** (e.g. partial charges) rather than only {0, –1}.  
 
 2. **Van der Waals (Lennard–Jones)**  
@@ -668,9 +649,9 @@ endfor
 
 3. **Reward Function**  
    - Combine terms with weights:  
-$$
-r = α * |E_HP|  +  β * E_elec_total  +  γ * E_LJ_total
-$$
+
+**r = α * |E_HP|  +  β * E_elec_total  +  γ * E_LJ_total**
+
    - **Normalize** each energy term so none dominates.  
    - Give **small stepwise rewards/penalties** (e.g. for collisions) to smooth the learning signal.
 
