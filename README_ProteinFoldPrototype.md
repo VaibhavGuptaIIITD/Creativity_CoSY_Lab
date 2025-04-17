@@ -103,7 +103,7 @@ $$
 
 ![Gym 1](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/Screenshot%202025-04-18%20at%2000.31.51.png?raw=true)
 
-![Gym 2](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/Screenshot%2025-04-18%at%00.32.07.png?raw=true)
+![Gym 2](https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/Screenshot%202025-04-18%20at%2000.32.07.png?raw=true)
 
 
 The Gym-Lattice environment provides a simplified yet insightful platform for exploring protein folding through reinforcement learig. By abstracting the complex nature of proteins into a 2D lattice model, it allows researchers and enthusiasts to experiment with RL algorithms in a controlled seting.
