@@ -7,6 +7,10 @@ For **initial proof-of-concept testing** with reinforcement learning (RL), the H
 
 ​The Hydrophobic-Polar (HP) model is a simplified computational framework designed to study the fundamental principles of protein folding. Introduced by Ken Dill in 1985, this model abstracts the complex nature of proteins by categorizing amino acids into two types: hydrophobic (H) and polar (P). By focusing on the interactions between these two types, the HP model aims to capture the essential driving forces behind protein folding.​ This ignores real-world side-chain complexity and focuses on hydrophobic collapse, a core folding principle [^1][^2].  
 
+
+![HP Model][https://github.com/VoHunMain/Creativity_CoSY_Lab/blob/main/readme_images2/Screenshot%202025-04-17%20at%2023.38.03.png?raw=true]
+
+
 1. **Simplified Representation**: In the HP model, a protein is represented as a chain of monomers placed on a lattice (either 2D or 3D). Each monomer corresponds to an amino acid and is classified as either hydrophobic (H) or polar (P). The chain forms a self-avoiding walk on the lattice, ensuring that no two monomers occupy the same position.
 
 2. **Hydrophobic Interactions**: The model emphasizes the tendency of hydrophobic residues to avoid contact with the aqueous environment. Therefore, non-covalent contacts between adjacent hydrophobic monomers (not sequentially connected) are energetically favorable. These interactions drive the folding process, leading to the formation of a compact hydrophobic core surrounded by polar residues.
