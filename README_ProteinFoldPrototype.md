@@ -63,18 +63,18 @@ This rewards non-consecutive hydrophobic amino acids that are adjacent on the la
 
 The lattice is a 2D grid $S \in {-1, 0, +1}^{(2n+1) \times (2n+1)}$ where:
 
-+1: Hydrophobic (H)
--1: Polar (P)
-0: Empty
+- +1: Hydrophobic (H)
+- -1: Polar (P)
+- 0: Empty
 
 **Action Space**
 
 The agent can choose from four discrete actios:
 
-0: Left
-1: Down
-2: Up
-3: Right
+- 0: Left
+- 1: Down
+- 2: Up
+- 3: Right
 
 **Reward Function**
 
