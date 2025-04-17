@@ -514,6 +514,7 @@ The environment implements:
    - Apply side-chain packing and energy minimization
 
 ---
+
 ## Advice 1
 
 ## Applying Deep Reinforcement Learning to the HP Model   
@@ -687,4 +688,160 @@ The above image provides a visual summary of the learning progress by smoothing 
 [^18]: Pathak, D. et al. (2017). *ICML*. [arXiv](https://arxiv.org/abs/1705.05363) (Curiosity-driven RL)  
 
 ---
+
+## Advice 2
+
+## Biological Concepts Implementation
+
+Protein folding is the process by which a linear sequence of amino acids assumes its native three-dimensional structure, which is essential for biological function. Traditional computational approaches like molecular dynamics simulations are computationally intensive and may struggle with the vast conformational space. Reinforcement learning offers a promising alternative by allowing an agent to learn optimal folding pathways through trial and error.
+
+**Key Components**
+
+**1. Force Fields in Protein Folding**
+
+Force fields are mathematical models used in molecular dynamics simulations to describe the potential energy of a molecular system as a function of atomic positions. Two prominent force fields are analyzed:
+
+**AMBER**
+- Developed by Peter Kollman's group at UCSF
+- Includes parameter sets like ff99 for peptides and proteins, GAFF for small organic molecules
+- Uses RESP (Restricted Electrostatic Potential) method to fit charges
+- Often performs better for DNA simulations
+
+**CHARMM**
+- Developed by Martin Karplus's group at Harvard
+- Includes parameter sets like CHARMM22 (all-atom proteins) and CHARMM27 (DNA, RNA, lipids)
+- Uses scaled Mulliken charges with focus on experimental validation
+- Often performs better for protein simulations
+
+The total potential energy calculation in force fields typically includes:
+
+```
+E = E_bonded + E_non-bonded
+```
+
+where:
+- `E_bonded = E_bonds + E_angles + E_dihedrals`
+- `E_non-bonded = E_vdW + E_electrostatic`
+
+For reinforcement learning, this energy function can be used to create a reward function: `r = -E`, encouraging the RL agent to find stable (low-energy) protein conformations.
+
+**2. Dihedral Angles and Protein Structure**
+
+Dihedral angles, such as φ (phi) and ψ (psi), are critical internal angles that describe protein backbone conformations:
+- φ is defined by C_(i-1) - N_i - C_(αi) - C_i
+- ψ is defined by N_i - C_(αi) - C_i - N_(i+1)
+
+In force fields, dihedral angles are scored using the potential energy function:
+
+```
+V(φ) = Σ(1/2)V_n(1 + cos(nφ - γ_n))
+```
+
+where V_n is the energy barrier, n is the multiplicity, and γ_n is the phase shift.
+
+**3. Reinforcement Learning Approach: DeepFoldit**
+
+DeepFoldit applies reinforcement learning to protein folding by formulating it as a Markov Decision Process (MDP):
+
+**State Representation**
+- Images of protein structures (160x160 pixels)
+- Preprocessed using log-polar transformation for rotation and scaling invariance:
+  ```
+  ρ = log(√((x - x_c)² + (y - y_c)²))
+  θ = arctan((y - y_c)/(x - x_c))
+  ```
+
+**Action Space**
+- 15 discrete moves (e.g., "Up," "Down," "Left," "Right," "Zoom In," "Zoom Out")
+- Implemented via tools like xdotool for interaction with Foldit Standalone
+
+**Reward Function**
+- Based on improvement in folding score calculated by the Rosetta algorithm:
+  ```
+  r = score(s_t) - score(s_t+1)
+  ```
+- Typically scaled (e.g., by a factor of 0.175)
+
+**Neural Network Architecture**
+- Input: 160x160 RGB image
+- Convolutional Layers: 2-3 layers with ReLU activations
+- Fully Connected Layers: One or more hidden layers (e.g., 256 neurons)
+- Output Layer: 15 neurons (one per discrete action)
+
+**Training Methodology**
+- Deep Q-Network (DQN) with Q-learning update:
+  ```
+  Q(s,a) ← Q(s,a) + α[r + γ max_a' Q(s',a') - Q(s,a)]
+  ```
+- Experience replay with memory size of 8000
+- ε-greedy exploration strategy (decaying from 1.0 to 0.1)
+- Learning rate: ~1×10⁻⁴
+- Discount factor: ~0.95
+
+**Experimental Results**
+
+DeepFoldit was evaluated on 40 small proteins from the Protein Data Bank (PDB):
+- 20 proteins for training, 20 for testing
+- After ~30,000 training steps:
+  - Training set improvement: ~5.8%
+  - Test set improvement: ~4.5%
+
+These results suggest the model can generalize to unseen protein structures.
+
+**Optimized Hyperparameters**
+
+| Hyperparameter | Optimal Value |
+|----------------|---------------|
+| First Conv Layer Depth | 30 |
+| First Layer Receptive Field | 15 |
+| First Layer Stride | 1 |
+| Second Conv Layer Depth | 15 |
+| Second Layer Receptive Field | 20 |
+| Second Layer Stride | 1 |
+| Dense Layer Size | 200 |
+| Replay Memory Size | 8000 |
+| Learning Rate | 1×10⁻⁴ |
+| Momentum | 0.95 |
+| Decay | 2×10⁻⁶ |
+| Input Image Size | 160 |
+| Score Scaling | 0.175 |
+| Discount Factor (γ) | 0.95 |
+| Mini Batch Size | 50 |
+| Initial Epsilon | 0.25 |
+| Final Epsilon | 0.05 |
+
+**Proposed Novel Architecture**
+
+We propose a novel model architecture integrating:
+1. Reinforcement learning for decision-making
+2. Graph Neural Networks (GNNs) for capturing the relational structure of proteins
+3. Long Short-Term Memory (LSTM) networks for sequential aspects of protein folding
+
+This hybrid approach aims to better capture both the sequential and relational nature of protein folding.
+
+**Future Directions**
+
+1. **Extended Training**: Increase training durations to millions of timesteps
+2. **Continuous Action Space**: Move from discrete to continuous action spaces for finer control (possibly using DDPG)
+3. **Integration with Physics-Based Models**: Combine RL with AMBER or CHARMM force fields for better energy estimation
+4. **Hybrid Approaches**: Combine reinforcement learning with supervised methods (similar to AlphaFold)
+5. **Partial Charges Optimization**: Incorporate amino acid partial charges for more accurate electrostatic interaction modeling
+
+**References**
+
+[^19]: Smith et al., Neural Network Energy Functions for Protein Folding, 2020. [DOI](https://doi.org/10.1021/acs.jctc.2c00069)
+[^20]: Lee et al., Machine Learning in Protein Structure Prediction, 2021. [DOI](https://doi.org/10.1016/j.cbpa.2021.04.005)
+[^21]: Jones and Wang, Comparison of AMBER and CHARMM for Molecular Simulations, Journal of Computational Chemistry, 2019. [DOI](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.sciencedirect.com/science/article/abs/pii/S0950061819330296&ved=2ahUKEwil_qn2-d-MAxXKZSoJHVdWO9YQFnoECBcQAQ&usg=AOvVaw0WYuQACoERgZQD9ZxMrLcx)
+[^22]: DeepFoldit – A Deep Reinforcement Learning Neural Network Folding Proteins. [DOI](https://arxiv.org/abs/2011.03442)
+[^23]: Jumper, J. et al., Highly Accurate Protein Structure Prediction with AlphaFold. [DOI](https://www.nature.com/articles/s41586-021-03819-2)
+[^24]: Proteopedia: Dihedral Angles. [DOI](https://proteopedia.org/wiki/index.php/Dihedral_angles)
+[^25]: Schmid et al., Optimization of Dihedral Angle Parameters in GROMOS, JCTC, 2011. [DOI](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://abstracts.boku.ac.at/download.php%3Fdataset_id%3D19374%26property_id%3D107%26role_id%3DNONE&ved=2ahUKEwiw_-jc-d-MAxUl3TgGHUK7FTgQFnoECBYQAQ&usg=AOvVaw0aVeUJuQ15aaIx5kjh0Uag)
+[^26]: Foldit: An Online Puzzle Game for Protein Structure Prediction. [DOI](https://fold.it/portal/)
+[^27]: The Protein Data Bank. [DOI](https://www.rcsb.org/)
+[^28]: The Amber Biomolecular Simulation Programs. [DOI](https://onlinelibrary.wiley.com/doi/10.1002/jcc.20253)
+
+
+
+
+
 
