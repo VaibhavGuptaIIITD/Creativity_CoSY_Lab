@@ -528,17 +528,22 @@ A protein of length N is a self‑avoiding walk (SAW) on the integer lattice.
 - **Sequence**: S = (p1, …, pN), each pi ∈ {H, P}  
 - **Backbone adjacency** (neighboring monomers must sit on adjacent grid points):  
 
-  **if |i – j| = 1 then
-     |x_i – x_j| + |y_i – y_j| = 1**
+if abs(i - j) == 1:
+    assert abs(x[i] - x[j]) + abs(y[i] - y[j]) == 1
 
-- **Self‑avoidance** (no two monomers occupy the same site):  
+- **Self‑avoidance** (no two monomers occupy the same site): 
 
-  **if i ≠ j then
-     (x_i, y_i) ≠ (x_j, y_j)**
+if i != j:
+    assert (x[i], y[i]) != (x[j], y[j])
 
 - **Energy of conformation C** (minus number of non‑bonded H–H contacts):  
 
-  **E(C) = – ∑_{i<j, |i–j|>1} 1{ p_i = H AND p_j = H AND |x_i–x_j|+|y_i–y_j| = 1 }**
+E = 0
+for i in range(N):
+    for j in range(i+1, N):
+        if abs(i - j) > 1 and p[i] == 'H' and p[j] == 'H':
+            if abs(x[i] - x[j]) + abs(y[i] - y[j]) == 1:
+                E -= 1
 
   The agent seeks to **minimize** E(C).
 
