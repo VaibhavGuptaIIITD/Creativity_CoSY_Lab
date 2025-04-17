@@ -39,7 +39,7 @@ In this framework, protein folding is modeled as a sequential decision-making pr
 
 - **States ($s_t$)**: Represent the current configuration of the protein on a 2D lattice.
 - **Actions ($a_t$)**: Choices to place the next amino acid in one of four directions—left, down, up, or right.
-- **Rewards ($r_t$)**: Feedback based on the stability of the resulting structure, with penalties for invalid moves. The agent aims to learn a policy \(\pi(a_t | s_t)\) that maximizes the expected cumulative reward over an episode.
+- **Rewards ($r_t$)**: Feedback based on the stability of the resulting structure, with penalties for invalid moves. The agent aims to learn a policy $\pi(a_t | s_t)$ that maximizes the expected cumulative reward over an episode.
 
 
 **Mathematical Formulation**
