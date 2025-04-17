@@ -669,7 +669,7 @@ endfor
 3. **Reward Function**  
    - Combine terms with weights:  
 $$
-     r = α * |E_HP|  +  β * E_elec_total  +  γ * E_LJ_total
+r = α * |E_HP|  +  β * E_elec_total  +  γ * E_LJ_total
 $$
    - **Normalize** each energy term so none dominates.  
    - Give **small stepwise rewards/penalties** (e.g. for collisions) to smooth the learning signal.
