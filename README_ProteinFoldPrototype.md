@@ -517,9 +517,11 @@ The environment implements:
 
 ## Advice 1
 
-## Applying Deep Reinforcement Learning to the HP Model   
+## Applying Deep Reinforcement Learning to the HP Model    
 
-**Paper**: [Applying Deep Reinforcement Learning to the HP Model for Protein Structure Prediction](https://github.com/CompSoftMatterBiophysics-CityU-HK/Applying-DRL-to-HP-Model-for-Protein-Structure-Prediction)    
+**Paper**: [Applying Deep Reinforcement Learning to the HP Model for Protein Structure Prediction](https://arxiv.org/pdf/2211.14939)
+
+**GitHub**: [Applying Deep Reinforcement Learning to the HP Model for Protein Structure Prediction](https://github.com/CompSoftMatterBiophysics-CityU-HK/Applying-DRL-to-HP-Model-for-Protein-Structure-Prediction)  
 
 ---
 
