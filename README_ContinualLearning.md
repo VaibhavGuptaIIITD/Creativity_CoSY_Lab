@@ -82,15 +82,6 @@ The final prediction layer uses biological principles:
 6. **Associative Prediction:** Final layer produces outputs with local learning  
 7. **Feedback:** Results inform memory management and slang database updates
 
-## Performance Expectations  
-Based on individual component performance:
-
-- **Forgetting Reduction:** 70-85% less degradation than naive approaches (combining EWC, UKD, memory replay, and associative learning)  
-- **Adaptation Speed:** 90-95% of unconstrained plasticity while maintaining stability  
-- **Slang Handling:** Near real-time detection and adaptation to new linguistic patterns  
-- **Memory Efficiency:** Constant memory usage with sparse coding compression  
-- **Computational Efficiency:** 20x+ speedup for long sequences through attention sinks
-
 ---
 
 ##  References
