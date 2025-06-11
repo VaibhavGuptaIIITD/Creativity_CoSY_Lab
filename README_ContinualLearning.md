@@ -27,7 +27,7 @@ Before main transformer processing, implement the fruit fly-inspired sparse codi
 - **Local Updates:** Prepare for associative learning in later stages
 
 ### Stage 3: Core Streaming Transformer with Memory  
-**Component:** Main BTP Paper + StreamingLLM (2024)  
+**Component:** StreamingLLM (2024)  
 The central processing unit combines the memory-augmented transformer with efficient streaming:
 
 - **Temporal Attention:** Implements the temporal decay mechanism (λ = 0.1) for emphasizing recent content while maintaining historical context  
