@@ -1,5 +1,7 @@
 # Ensemble Pipeline for Adaptive Streaming NLP with Catastrophic Forgetting Mitigation
 
+![](https://github.com/VaibhavGuptaIIITD/Creativity_CoSY_Lab/blob/main/readme_images2/adaptiveNLP.png?raw=true)
+
 ## Executive Summary
 This proposal presents a comprehensive ensemble pipeline that combines seven state-of-the-art approaches to create a robust system for adaptive streaming NLP while mitigating catastrophic forgetting. The pipeline integrates slang detection, continual learning, biological inspiration, and efficient streaming mechanisms to handle dynamic text streams with evolving language patterns.
 
